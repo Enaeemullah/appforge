@@ -1,0 +1,114 @@
+@use '../abstracts/variables' as *;
+
+// ============================================================
+// BADGES & TAGS
+// ============================================================
+
+// Generic badge
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  line-height: 1;
+  white-space: nowrap;
+
+  &-primary   { background: rgba($color-primary, 0.1);   color: $color-primary-dark; }
+  &-secondary { background: rgba($color-secondary, 0.1); color: $color-secondary; }
+  &-success   { background: rgba($color-success, 0.1);   color: $color-primary-dark; }
+  &-warning   { background: rgba($color-warning, 0.15);  color: #b45309; }
+  &-danger    { background: rgba($color-danger, 0.1);    color: $color-danger; }
+  &-dark      { background: $gray-900; color: $color-white; }
+  &-light     { background: $gray-100; color: $gray-700; }
+  &-new       { background: $gradient-primary; color: $color-white; }
+}
+
+// Rating badge
+.rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: $color-primary;
+  color: $color-white;
+  padding: 4px 10px;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+
+  &::before { content: '★'; font-size: 11px; }
+}
+
+// Star display
+.stars {
+  color: $color-warning;
+  letter-spacing: 1px;
+  font-size: 14px;
+}
+
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: $spacer;
+  font-size: $font-size-sm;
+  color: $gray-600;
+
+  .stars { color: $color-warning; }
+  strong { color: $gray-900; }
+}
+
+// Category / taxonomy tags
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: $gray-100;
+  border: 1px solid $gray-200;
+  border-radius: $radius-full;
+  font-size: $font-size-sm;
+  color: $gray-700;
+  text-decoration: none;
+  font-weight: $font-weight-medium;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: $color-white;
+    transform: translateY(-1px);
+  }
+}
+
+.tags-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacer;
+}
+
+// Section label / kicker
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-extrabold;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: $color-primary;
+  margin-bottom: $space-1;
+}
+
+// Pill counter
+.count-pill {
+  background: $color-primary;
+  color: $color-white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  padding: 1px 8px;
+  border-radius: $radius-full;
+  min-width: 22px;
+  text-align: center;
+}

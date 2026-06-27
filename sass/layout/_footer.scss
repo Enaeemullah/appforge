@@ -1,0 +1,201 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ============================================================
+// FOOTER
+// ============================================================
+
+.site-footer {
+  background: $color-dark;
+  color: $gray-400;
+  margin-top: $space-8;
+  padding-top: $space-8;
+}
+
+.footer-top {
+  padding-bottom: $space-7;
+  border-bottom: 1px solid rgba($color-white, 0.08);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr);
+  gap: $space-5;
+
+  @include respond-to('lg') { grid-template-columns: 1fr 1fr; }
+  @include respond-to('md') { grid-template-columns: 1fr; }
+}
+
+// Footer brand column
+.footer-brand {
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: $spacer;
+    margin-bottom: $space-2;
+    text-decoration: none;
+  }
+
+  .footer-logo-icon {
+    font-size: 28px;
+    background: $gradient-primary;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .footer-logo-text {
+    font-size: 20px;
+    font-weight: $font-weight-extrabold;
+    color: $color-white;
+
+    span { color: $color-primary; }
+  }
+
+  p {
+    font-size: $font-size-sm;
+    line-height: $line-height-loose;
+    color: $gray-500;
+    max-width: 260px;
+    margin-bottom: $space-3;
+  }
+
+  .footer-social {
+    display: flex;
+    gap: $spacer;
+  }
+
+  .social-btn {
+    width: 36px;
+    height: 36px;
+    background: rgba($color-white, 0.06);
+    border: 1px solid rgba($color-white, 0.1);
+    border-radius: $radius-full;
+    @include flex-center;
+    color: $gray-400;
+    text-decoration: none;
+    font-size: 16px;
+    transition: $transition-base;
+
+    &:hover {
+      background: $color-primary;
+      border-color: $color-primary;
+      color: $color-white;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Footer nav columns
+.footer-col {
+  h5 {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    color: $color-white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: $space-2;
+  }
+
+  nav ul,
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  a {
+    font-size: $font-size-sm;
+    color: $gray-500;
+    text-decoration: none;
+    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    &:hover { color: $color-primary; }
+  }
+}
+
+// Footer bottom bar
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-3 0;
+  gap: $space-2;
+  flex-wrap: wrap;
+
+  @include respond-to('md') {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $gray-600;
+    margin: 0;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    font-size: $font-size-sm;
+    color: $gray-600;
+    text-decoration: none;
+
+    &:hover { color: $color-primary; }
+  }
+}
+
+.footer-credit {
+  font-size: $font-size-sm;
+  color: $gray-600;
+
+  a {
+    color: $color-primary;
+    text-decoration: none;
+    font-weight: $font-weight-semibold;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
+// Back to top button
+.back-to-top {
+  @include btn-reset;
+  position: fixed;
+  bottom: $space-4;
+  right: $space-4;
+  width: 44px;
+  height: 44px;
+  background: $color-primary;
+  border-radius: $radius-full;
+  @include flex-center;
+  color: $color-white;
+  box-shadow: $shadow-primary;
+  z-index: $z-fixed;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px);
+  transition: $transition-slow;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  &:hover {
+    background: $color-primary-dark;
+    transform: translateY(-2px);
+  }
+
+  svg { width: 20px; height: 20px; }
+}

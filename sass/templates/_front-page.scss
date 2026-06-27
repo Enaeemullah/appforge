@@ -1,0 +1,607 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins'   as *;
+
+// ============================================================
+// FRONT PAGE / HOMEPAGE
+// ============================================================
+
+// Two-column wrapper: main content + sidebar
+.apk-homepage {
+  max-width: $container-max;
+  margin: 0 auto;
+  padding: $space-4 $container-padding;
+  display: grid;
+  grid-template-columns: 1fr $sidebar-width;
+  gap: $space-4;
+  align-items: start;
+
+  @include respond-to('lg') { grid-template-columns: 1fr; }
+  @media (max-width: #{$bp-md}) { padding: $space-3 $space-2; }
+}
+
+.apk-main,
+.apk-sidebar { min-width: 0; }
+
+// Section spacing
+.discover-section,
+.ranked-section,
+.hot-section,
+.latest-section { margin-bottom: $space-4; }
+
+// Section header row (title + "View All" link)
+.apk-section-header {
+  @include flex-between;
+  margin-bottom: $space-2;
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $gray-900;
+    position: relative;
+    padding-left: 12px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 60%;
+      background: $color-primary;
+      border-radius: $radius-full;
+    }
+  }
+
+  &__link {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-primary;
+    text-decoration: none;
+    border: 1px solid rgba($color-primary, 0.35);
+    padding: 4px 14px;
+    border-radius: $radius-full;
+    transition: $transition-base;
+
+    &:hover {
+      background: $color-primary;
+      color: $color-white;
+    }
+  }
+}
+
+// Homepage carousel wrapper
+.homepage-carousel {
+  border-radius: $radius-2xl;
+  overflow: hidden;
+  margin-bottom: $space-4;
+  box-shadow: $shadow-md;
+  position: relative;
+}
+
+// Discover row — icon tile grid
+.discover-row {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: $space-1;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(6, 1fr); }
+  @include respond-to('md') { grid-template-columns: repeat(4, 1fr); }
+}
+
+.app-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: $gray-800;
+  padding: $space-2 $spacer;
+  border-radius: $radius-lg;
+  transition: $transition-base;
+
+  &:hover {
+    background: $gray-100;
+    transform: translateY(-2px);
+    color: $color-primary;
+  }
+
+  &__icon {
+    width: 60px;
+    height: 60px;
+    border-radius: $radius-lg;
+    overflow: hidden;
+    background: $gradient-card;
+    @include flex-center;
+    font-size: 26px;
+    flex-shrink: 0;
+    box-shadow: $shadow-sm;
+
+    img { @include img-cover; border-radius: $radius-lg; }
+  }
+
+  &__name {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    text-align: center;
+    line-height: 1.3;
+    color: inherit;
+    @include truncate(2);
+  }
+}
+
+// Ranked row — 3-col card grid
+.ranked-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-2;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @include respond-to('md') { grid-template-columns: 1fr; }
+}
+
+.ranked-card {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  text-decoration: none;
+  color: $gray-900;
+  background: $color-white;
+  border: 1px solid $gray-200;
+  border-radius: $radius-lg;
+  padding: $space-2;
+  transition: $transition-base;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.4);
+    box-shadow: $shadow-sm;
+    transform: translateY(-2px);
+  }
+
+  &__badge {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-extrabold;
+    color: $color-primary;
+    width: 20px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  &__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: $radius-md;
+    overflow: hidden;
+    background: $gradient-card;
+    @include flex-center;
+    font-size: 20px;
+    flex-shrink: 0;
+
+    img { @include img-cover; border-radius: $radius-md; }
+  }
+
+  &__name {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $gray-900;
+    @include truncate(1);
+    flex: 1;
+  }
+
+  &__cat {
+    font-size: $font-size-xs;
+    color: $gray-500;
+  }
+
+  &__stars {
+    font-size: $font-size-xs;
+    color: #f59e0b;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+}
+
+// Hot apps & Latest update — shared 3-col grid item style
+%app-list-item {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  text-decoration: none;
+  color: $gray-900;
+  background: $color-white;
+  border: 1px solid $gray-200;
+  border-radius: $radius-lg;
+  padding: $space-2;
+  transition: $transition-base;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.4);
+    box-shadow: $shadow-sm;
+    transform: translateY(-2px);
+  }
+}
+
+%app-list-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-2;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @include respond-to('md') { grid-template-columns: 1fr; }
+}
+
+// Hot apps
+.hot-apps-grid { @extend %app-list-grid; }
+
+.hot-app-item {
+  @extend %app-list-item;
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: $radius-md;
+    overflow: hidden;
+    background: $gradient-card;
+    @include flex-center;
+    font-size: 22px;
+    flex-shrink: 0;
+
+    img { @include img-cover; border-radius: $radius-md; }
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__name {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $gray-900;
+    @include truncate(1);
+  }
+
+  &__cat {
+    font-size: $font-size-xs;
+    color: $gray-500;
+  }
+
+  &__dl {
+    font-size: $font-size-xs;
+    color: $color-primary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// Latest update
+.latest-grid { @extend %app-list-grid; }
+
+.latest-app-item {
+  @extend %app-list-item;
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: $radius-md;
+    overflow: hidden;
+    background: $gradient-card;
+    @include flex-center;
+    font-size: 22px;
+    flex-shrink: 0;
+
+    img { @include img-cover; border-radius: $radius-md; }
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__name {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $gray-900;
+    @include truncate(1);
+  }
+
+  &__cat {
+    font-size: $font-size-xs;
+    color: $gray-500;
+  }
+
+  &__ver {
+    font-size: $font-size-xs;
+    color: $gray-400;
+  }
+}
+
+// ---- SIDEBAR ----
+
+.apk-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.apk-widget {
+  background: $color-white;
+  border-radius: $radius-xl;
+  border: 1px solid $gray-200;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $space-1;
+    padding: $space-1 $space-3;
+    border-bottom: 1px solid $gray-100;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 3px;
+      height: 16px;
+      background: $color-primary;
+      border-radius: $radius-full;
+      flex-shrink: 0;
+    }
+  }
+
+  &__title {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    color: $gray-800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0;
+  }
+
+  &__body { padding: $space-2 $space-3; }
+}
+
+// Tag cloud
+.apk-tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.apk-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $gray-700;
+  background: $gray-100;
+  border: 1px solid $gray-200;
+  border-radius: $radius-full;
+  padding: 4px 10px;
+  text-decoration: none;
+  transition: $transition-base;
+
+  &:hover {
+    background: $color-primary;
+    color: $color-white;
+    border-color: $color-primary;
+  }
+}
+
+// Promo widget
+.apk-promo-widget {
+  background: $color-white;
+  border-radius: $radius-xl;
+  border: 1px solid $gray-200;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+
+  &__image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__image-placeholder {
+    width: 100%;
+    height: 160px;
+    background: $gradient-hero;
+    @include flex-center;
+    font-size: 60px;
+  }
+
+  &__body { padding: $space-2 $space-3; }
+
+  &__name {
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    color: $gray-900;
+    margin-bottom: 4px;
+  }
+
+  &__cat {
+    font-size: $font-size-xs;
+    color: $gray-500;
+    margin-bottom: $space-2;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-2;
+  }
+}
+
+// Editor's picks list
+.editor-pick-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-pick-item {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  text-decoration: none;
+  color: $gray-900;
+  padding: $spacer 0;
+  border-bottom: 1px solid $gray-100;
+  transition: $transition-base;
+
+  &:last-child { border-bottom: none; }
+  &:hover { color: $color-primary; }
+
+  &__num {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-extrabold;
+    color: $gray-300;
+    width: 16px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  &__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-md;
+    overflow: hidden;
+    background: $gradient-card;
+    @include flex-center;
+    font-size: 16px;
+    flex-shrink: 0;
+
+    img { @include img-cover; border-radius: $radius-md; }
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__name {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    @include truncate(1);
+  }
+
+  &__cat {
+    font-size: $font-size-xs;
+    color: $gray-500;
+  }
+
+  &__stars {
+    font-size: $font-size-xs;
+    color: #f59e0b;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+}
+
+// ---- BLOG POSTS SECTION ----
+
+.blog-section { margin-bottom: $space-4; }
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-3;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @include respond-to('md') { grid-template-columns: 1fr; }
+}
+
+.blog-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: $gray-900;
+  background: $color-white;
+  border: 1px solid $gray-200;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  transition: $transition-base;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.35);
+    box-shadow: $shadow-md;
+    transform: translateY(-3px);
+  }
+
+  &__thumb {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: $gradient-hero;
+    flex-shrink: 0;
+
+    img { @include img-cover; transition: transform 0.4s ease; }
+
+    &-placeholder {
+      width: 100%;
+      height: 100%;
+      @include flex-center;
+      font-size: 40px;
+      background: $gradient-hero;
+    }
+  }
+
+  &:hover &__thumb img { transform: scale(1.04); }
+
+  &__body {
+    padding: $space-2 $space-3;
+    display: flex;
+    flex-direction: column;
+    gap: $spacer;
+    flex: 1;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: $space-1;
+    flex-wrap: wrap;
+  }
+
+  &__cat {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: $color-primary;
+    background: rgba($color-primary, 0.08);
+    padding: 2px 8px;
+    border-radius: $radius-full;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__date {
+    font-size: $font-size-xs;
+    color: $gray-500;
+    margin-left: auto;
+  }
+
+  &__title {
+    font-size: $font-size-md;
+    font-weight: $font-weight-bold;
+    color: $gray-900;
+    line-height: 1.4;
+    @include truncate(2);
+    margin: 0;
+  }
+
+  &__excerpt {
+    font-size: $font-size-sm;
+    color: $gray-600;
+    line-height: 1.5;
+    @include truncate(2);
+    margin: 0;
+  }
+}

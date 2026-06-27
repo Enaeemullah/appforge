@@ -1,0 +1,328 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ============================================================
+// HEADER & NAVIGATION
+// ============================================================
+
+.top-nav {
+  background: $color-white;
+  position: sticky;
+  top: 0;
+  z-index: $z-nav;
+  box-shadow: $shadow-sm;
+  border-bottom: 1px solid $gray-200;
+  height: $nav-height;
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 $container-padding;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  gap: $space-3;
+}
+
+// Logo
+.nav-logo a {
+  display: flex;
+  align-items: center;
+  gap: $spacer;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logo-icon {
+  font-size: 28px;
+  background: $gradient-primary;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.logo-text {
+  font-size: 22px;
+  font-weight: $font-weight-extrabold;
+  color: $gray-900;
+
+  span { color: $color-primary; }
+}
+
+// Desktop nav menu (WordPress renders as <ul>)
+.main-nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+
+  @include respond-to('lg') { display: none; }
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+  list-style: none;
+
+  > li > a {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    text-decoration: none;
+    color: $gray-700;
+    font-weight: $font-weight-medium;
+    font-size: $font-size-md;
+    border-radius: $radius-md;
+    transition: $transition-base;
+
+    &:hover {
+      color: $color-primary;
+      background: rgba($color-primary, 0.06);
+    }
+  }
+
+  > .current-menu-item > a,
+  > .current_page_item > a {
+    color: $color-primary;
+    background: rgba($color-primary, 0.08);
+    font-weight: $font-weight-semibold;
+  }
+}
+
+// Nav actions (right side)
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacer;
+}
+
+.nav-search-btn {
+  @include btn-reset;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-full;
+  @include flex-center;
+  color: $gray-700;
+  transition: $transition-base;
+
+  &:hover {
+    background: $gray-100;
+    color: $color-primary;
+  }
+
+  svg { width: 20px; height: 20px; }
+}
+
+// Mobile menu button
+.mobile-menu-btn {
+  @include btn-reset;
+  display: none;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-md;
+  @include flex-center;
+  flex-direction: column;
+  gap: 5px;
+
+  @include respond-to('lg') { display: flex; }
+
+  span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: $gray-800;
+    border-radius: $radius-full;
+    transition: $transition-slow;
+  }
+
+  &.active {
+    span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+}
+
+// Mobile nav drawer
+.mobile-nav {
+  position: fixed;
+  top: $nav-height;
+  left: -100%;
+  width: 100%;
+  height: calc(100dvh - #{$nav-height});
+  background: $color-white;
+  z-index: $z-mobile-nav;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+  @include scrollbar;
+
+  &.active { left: 0; }
+
+  &__inner { padding: $space-3; }
+}
+
+.mobile-menu {
+  list-style: none;
+
+  li { border-bottom: 1px solid $gray-100; }
+
+  a {
+    display: block;
+    padding: 15px $spacer;
+    color: $gray-800;
+    font-weight: $font-weight-medium;
+    font-size: $font-size-lg;
+    text-decoration: none;
+    transition: color 0.2s;
+
+    &:hover { color: $color-primary; }
+  }
+
+  .current-menu-item a { color: $color-primary; font-weight: $font-weight-semibold; }
+}
+
+// Search overlay
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba($color-white, 0.97);
+  backdrop-filter: blur(8px);
+  z-index: $z-overlay;
+  @include flex-center;
+  opacity: 0;
+  visibility: hidden;
+  transition: $transition-slow;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__inner {
+    width: 90%;
+    max-width: 640px;
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    color: $gray-500;
+    margin-bottom: $space-2;
+    text-align: center;
+    font-weight: $font-weight-medium;
+  }
+
+  &__form {
+    display: flex;
+    align-items: center;
+    background: $gray-50;
+    border: 2px solid $gray-300;
+    border-radius: $radius-full;
+    padding: 6px 6px 6px 24px;
+    gap: $spacer;
+    transition: $transition-base;
+
+    &:focus-within {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 4px rgba($color-primary, 0.1);
+    }
+
+    input {
+      flex: 1;
+      border: none;
+      background: none;
+      font-size: $font-size-xl;
+      color: $gray-900;
+      outline: none;
+      padding: 8px 0;
+
+      &::placeholder { color: $gray-400; }
+    }
+
+    button[type="submit"] {
+      background: $color-primary;
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: $radius-full;
+      color: $color-white;
+      @include flex-center;
+      cursor: pointer;
+      transition: $transition-base;
+      flex-shrink: 0;
+
+      &:hover { background: $color-primary-dark; }
+      svg { width: 20px; height: 20px; }
+    }
+  }
+}
+
+// Category nav bar (below main header)
+.cat-nav-bar {
+  background: $color-white;
+  border-bottom: 1px solid $gray-200;
+  position: sticky;
+  top: $nav-height;
+  z-index: $z-sticky;
+}
+
+.cat-nav-inner {
+  max-width: $container-max;
+  margin: 0 auto;
+  padding: 0 $container-padding;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar { display: none; }
+
+  @media (max-width: #{$bp-md}) { padding: 0 $space-2; }
+}
+
+.nav-cat-link {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  padding: 10px 16px;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $gray-600;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: $transition-fast;
+  flex-shrink: 0;
+
+  &:hover {
+    color: $color-primary;
+    border-bottom-color: $color-primary;
+  }
+
+  &.active {
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+    border-bottom-color: $color-primary;
+  }
+}
+
+.search-close-btn {
+  @include btn-reset;
+  position: absolute;
+  top: $space-3;
+  right: $space-3;
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-full;
+  background: $gray-100;
+  @include flex-center;
+  color: $gray-700;
+  font-size: 20px;
+  transition: $transition-base;
+
+  &:hover {
+    background: $gray-200;
+    color: $gray-900;
+  }
+}

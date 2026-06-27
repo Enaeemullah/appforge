@@ -1,0 +1,135 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ============================================================
+// 404 & SEARCH RESULTS TEMPLATES
+// ============================================================
+
+// 404 page
+.error-404-page {
+  min-height: calc(100vh - #{$nav-height});
+  @include flex-center;
+  flex-direction: column;
+  padding: $space-8 $container-padding;
+  text-align: center;
+}
+
+.error-404-inner {
+  max-width: 560px;
+  animation: fadeInUp 0.5s ease;
+}
+
+.error-404-graphic {
+  font-size: 96px;
+  margin-bottom: $space-3;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.1));
+}
+
+.error-404-number {
+  font-size: clamp(80px, 15vw, 140px);
+  font-weight: $font-weight-extrabold;
+  line-height: 1;
+  background: $gradient-primary;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: $space-2;
+}
+
+.error-404-title {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: $gray-900;
+  margin-bottom: $space-1;
+}
+
+.error-404-desc {
+  font-size: $font-size-base;
+  color: $gray-600;
+  line-height: $line-height-loose;
+  margin-bottom: $space-4;
+}
+
+.error-404-search {
+  margin-bottom: $space-4;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.error-404-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  flex-wrap: wrap;
+}
+
+// Search results page
+.search-results-header {
+  padding: $space-5 0 $space-3;
+
+  h1 {
+    font-size: $font-size-4xl;
+    font-weight: $font-weight-extrabold;
+    color: $gray-900;
+
+    span {
+      color: $color-primary;
+    }
+  }
+
+  .search-count {
+    font-size: $font-size-base;
+    color: $gray-500;
+    margin-top: $spacer;
+  }
+}
+
+.no-results {
+  text-align: center;
+  padding: $space-8 $space-3;
+
+  &__icon {
+    font-size: 64px;
+    margin-bottom: $space-3;
+    opacity: 0.4;
+  }
+
+  &__title {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $gray-700;
+    margin-bottom: $space-1;
+  }
+
+  &__desc {
+    font-size: $font-size-base;
+    color: $gray-500;
+    margin-bottom: $space-4;
+  }
+
+  &__suggestions {
+    margin-top: $space-3;
+    padding-top: $space-3;
+    border-top: 1px solid $gray-200;
+
+    p {
+      font-size: $font-size-sm;
+      color: $gray-500;
+      margin-bottom: $spacer;
+    }
+  }
+}
+
+// Animations
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

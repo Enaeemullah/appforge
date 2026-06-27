@@ -1,0 +1,46 @@
+/*!
+Theme Name: AppForge Pro
+Theme URI: https://naeem-ullah.com
+Author: Naeem Ullah
+Author URI: https://naeem-ullah.com
+Description: A professional APK download WordPress theme with a modern design, homepage carousel, category navigation, and full Customizer support.
+Version: 4.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: appforge
+Tags: custom-logo, custom-colors, custom-menu, featured-images, responsive-layout, two-columns
+*/
+
+// ============================================================
+// AppForge Pro — Main SCSS Entry Point
+// Compile: sass sass/main.scss style.css --style=compressed
+// ============================================================
+
+// 1. Abstracts (no output — variables, mixins only)
+@use 'abstracts/variables' as *;
+@use 'abstracts/mixins'    as *;
+
+// 2. Base
+@use 'base/reset';
+@use 'base/typography';
+@use 'base/utilities';
+
+// 3. Components
+@use 'components/buttons';
+@use 'components/cards';
+@use 'components/badges';
+@use 'components/forms';
+@use 'components/pagination';
+@use 'components/sidebar';
+
+// 4. Layout
+@use 'layout/header';
+@use 'layout/footer';
+@use 'layout/grid';
+@use 'layout/hero';
+
+// 5. Templates
+@use 'templates/single';
+@use 'templates/archive';
+@use 'templates/front-page';
+@use 'templates/404' as t404;

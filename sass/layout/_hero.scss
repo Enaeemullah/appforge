@@ -1,0 +1,246 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ============================================================
+// HERO SECTION & CAROUSEL
+// ============================================================
+
+.hero-section {
+  background: $gradient-brand;
+  padding: 48px 0 64px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    @include absolute-fill;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Ccircle cx='50' cy='50' r='40' fill='rgba(255,255,255,0.04)'/%3E%3Ccircle cx='350' cy='80' r='60' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='200' cy='320' r='80' fill='rgba(255,255,255,0.03)'/%3E%3Ccircle cx='380' cy='350' r='50' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E") repeat;
+    opacity: 0.6;
+  }
+}
+
+.hero-container {
+  max-width: $container-max;
+  margin: 0 auto;
+  padding: 0 $container-padding;
+  @media (max-width: #{$bp-md}) { padding: 0 $space-2; }
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: $space-5;
+  position: relative;
+  z-index: 1;
+
+  @include respond-to('lg') { grid-template-columns: 1fr; }
+}
+
+// Featured Carousel
+.featured-carousel {
+  @include glass(12px, rgba(255,255,255,0.12));
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: $radius-2xl;
+  overflow: hidden;
+}
+
+.carousel-container { position: relative; }
+
+.carousel-slide {
+  display: none;
+
+  &.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+  }
+}
+
+.carousel-img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.carousel-placeholder {
+  width: 100%;
+  height: 300px;
+  background: $gradient-hero;
+  @include flex-center;
+  font-size: 80px;
+  color: rgba($color-white, 0.4);
+}
+
+.carousel-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: $space-5 $space-3 $space-3;
+  background: linear-gradient(transparent, rgba($color-dark, 0.85));
+  color: $color-white;
+
+  h2 {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    margin-bottom: 6px;
+    color: $color-white;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: rgba($color-white, 0.85);
+    margin-bottom: 0;
+    @include truncate(2);
+  }
+}
+
+.carousel-btn {
+  @include btn-reset;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  @include glass(5px, rgba(255,255,255,0.25));
+  border: 1px solid rgba(255,255,255,0.3);
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-full;
+  @include flex-center;
+  color: $color-white;
+  font-size: 20px;
+  transition: $transition-base;
+
+  &:hover { background: $color-primary; border-color: $color-primary; }
+  &--prev { left: $space-2; }
+  &--next { right: $space-2; }
+}
+
+.carousel-dots {
+  position: absolute;
+  bottom: $space-2;
+  right: $space-2;
+  display: flex;
+  gap: 6px;
+}
+
+.carousel-dot {
+  @include btn-reset;
+  width: 8px;
+  height: 8px;
+  border-radius: $radius-full;
+  background: rgba($color-white, 0.5);
+  transition: $transition-base;
+
+  &.active {
+    background: $color-white;
+    width: 20px;
+  }
+}
+
+// Promo card below carousel
+.app-promo-card {
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $space-2 $space-3;
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  box-shadow: $shadow-xl;
+  margin: -$space-3 $space-3 $space-2;
+  position: relative;
+  z-index: 2;
+
+  &__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: $radius-lg;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: $gradient-card;
+    @include flex-center;
+    font-size: 28px;
+
+    img { @include img-cover; border-radius: $radius-lg; }
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+
+    h3 {
+      font-size: $font-size-base;
+      font-weight: $font-weight-bold;
+      color: $gray-900;
+      @include truncate(1);
+      margin-bottom: 2px;
+    }
+
+    p {
+      font-size: $font-size-xs;
+      color: $gray-500;
+      @include truncate(1);
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Hero sidebar
+.hero-sidebar {
+  background: rgba(255,255,255,0.96);
+  border-radius: $radius-2xl;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: $space-3;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+
+  @include respond-to('lg') {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include respond-to('md') {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Sidebar section heading
+.sidebar-heading {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: $gray-600;
+  margin-bottom: $space-1;
+}
+
+// Use app card
+.use-app-card {
+  background: $gradient-hero;
+  border-radius: $radius-lg;
+  padding: $space-2;
+  text-align: center;
+  color: $color-white;
+
+  h3 {
+    font-size: $font-size-lg;
+    margin-bottom: 6px;
+    color: $color-white;
+  }
+
+  .rating-row {
+    justify-content: center;
+    color: rgba($color-white, 0.9);
+    margin-bottom: $space-2;
+  }
+
+  .btn-download {
+    background: $color-white;
+    color: $color-secondary;
+
+    &:hover { background: $gray-100; box-shadow: none; }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

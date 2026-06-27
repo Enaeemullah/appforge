@@ -1,0 +1,150 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ============================================================
+// FORMS & INPUTS
+// ============================================================
+
+// Base input
+%input-base {
+  width: 100%;
+  padding: 12px 18px;
+  border: 1.5px solid $gray-300;
+  border-radius: $radius-full;
+  background: $color-white;
+  font-family: $font-family-base;
+  font-size: $font-size-md;
+  color: $gray-900;
+  outline: none;
+  transition: $transition-base;
+  appearance: none;
+
+  &::placeholder { color: $gray-400; }
+
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.12);
+  }
+
+  &:invalid { border-color: $color-danger; }
+}
+
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="url"],
+input[type="number"],
+textarea,
+select {
+  @extend %input-base;
+}
+
+textarea {
+  border-radius: $radius-lg;
+  resize: vertical;
+  min-height: 120px;
+}
+
+// Search form
+.search-form {
+  display: flex;
+  gap: $spacer;
+
+  input[type="search"] {
+    flex: 1;
+  }
+
+  button {
+    background: $color-primary;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: $radius-full;
+    color: $color-white;
+    @include flex-center;
+    flex-shrink: 0;
+    transition: $transition-base;
+
+    &:hover { background: $color-primary-dark; }
+
+    svg { width: 18px; height: 18px; }
+  }
+}
+
+// Inline search (hero/sidebar)
+.search-input-group {
+  display: flex;
+  gap: $spacer;
+  background: $gray-100;
+  border: 1.5px solid $gray-200;
+  border-radius: $radius-full;
+  padding: 6px 6px 6px 20px;
+  transition: $transition-base;
+
+  &:focus-within {
+    border-color: $color-primary;
+    background: $color-white;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: $font-size-md;
+    color: $gray-900;
+    outline: none;
+    min-width: 0;
+
+    &::placeholder { color: $gray-400; }
+  }
+
+  button {
+    background: $color-primary;
+    border: none;
+    padding: 0 $space-2;
+    height: 36px;
+    border-radius: $radius-full;
+    color: $color-white;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    cursor: pointer;
+    transition: $transition-base;
+    white-space: nowrap;
+
+    &:hover { background: $color-primary-dark; }
+  }
+}
+
+// Comment form
+.comment-form {
+  display: grid;
+  gap: $space-2;
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-2;
+
+    @include respond-to('md') { grid-template-columns: 1fr; }
+  }
+
+  label {
+    display: block;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $gray-700;
+    margin-bottom: $spacer;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="url"] {
+    border-radius: $radius-md;
+  }
+
+  .form-submit {
+    margin-top: $space-1;
+  }
+}

@@ -1,0 +1,329 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ============================================================
+// CARDS — App Cards & Blog Post Cards
+// ============================================================
+
+// --- Base card ---
+.card {
+  @include card;
+  @include hover-lift;
+  overflow: hidden;
+  transition: $transition-slow;
+}
+
+// --- App Card (grid view) ---
+.app-card {
+  background: $color-white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+  transition: $transition-slow;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $gray-200;
+
+  &:hover {
+    box-shadow: $shadow-lg;
+    transform: translateY(-4px);
+    border-color: rgba($color-primary, 0.2);
+  }
+
+  &__thumb {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: $gray-100;
+
+    img {
+      @include img-cover;
+      transition: transform 0.4s ease;
+    }
+
+    &:hover img { transform: scale(1.05); }
+  }
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: $radius-lg;
+    overflow: hidden;
+    background: $gradient-card;
+    @include flex-center;
+    font-size: 32px;
+    flex-shrink: 0;
+    box-shadow: $shadow-sm;
+
+    img { @include img-cover; border-radius: $radius-lg; }
+  }
+
+  &__body {
+    padding: $space-2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $gray-900;
+    @include truncate(2);
+    margin-bottom: $spacer;
+
+    a {
+      color: inherit;
+      &:hover { color: $color-primary; }
+    }
+  }
+
+  &__excerpt {
+    font-size: $font-size-sm;
+    color: $gray-600;
+    @include truncate(2);
+    margin-bottom: $space-2;
+    flex: 1;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacer;
+    margin-top: auto;
+  }
+
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $gray-800;
+
+    .stars { color: $color-warning; font-size: 12px; }
+  }
+
+  &__category {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $color-primary;
+    background: rgba($color-primary, 0.08);
+    padding: 3px 10px;
+    border-radius: $radius-full;
+  }
+
+  &__downloads {
+    font-size: $font-size-xs;
+    color: $gray-500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__footer {
+    padding: $space-1 $space-2 $space-2;
+    border-top: 1px solid $gray-100;
+  }
+}
+
+// --- App Card (list / small variant) ---
+.app-card-list {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-2;
+  background: $gray-50;
+  border-radius: $radius-md;
+  border: 1px solid $gray-200;
+  transition: $transition-base;
+  text-decoration: none;
+
+  &:hover {
+    background: $color-white;
+    box-shadow: $shadow-md;
+    border-color: rgba($color-primary, 0.2);
+  }
+
+  &__icon {
+    width: 52px;
+    height: 52px;
+    border-radius: $radius-md;
+    overflow: hidden;
+    background: $gradient-card;
+    @include flex-center;
+    font-size: 26px;
+    flex-shrink: 0;
+
+    img { @include img-cover; border-radius: $radius-md; }
+  }
+
+  &__info { flex: 1; min-width: 0; }
+
+  &__title {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $gray-900;
+    @include truncate(1);
+    margin-bottom: 3px;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: $spacer;
+    font-size: $font-size-xs;
+    color: $gray-500;
+
+    .stars { color: $color-warning; }
+  }
+}
+
+// --- Blog Post Card ---
+.post-card {
+  background: $color-white;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+  border: 1px solid $gray-200;
+  transition: $transition-slow;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    box-shadow: $shadow-lg;
+    transform: translateY(-4px);
+    border-color: rgba($color-primary, 0.2);
+  }
+
+  &__thumb {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: $gray-100;
+
+    img { @include img-cover; transition: transform 0.4s ease; }
+    &:hover img { transform: scale(1.05); }
+
+    &--placeholder {
+      background: $gradient-hero;
+      @include flex-center;
+      font-size: 48px;
+      color: rgba($color-white, 0.5);
+    }
+  }
+
+  &__category-badge {
+    position: absolute;
+    top: $space-2;
+    left: $space-2;
+    background: $color-primary;
+    color: $color-white;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    padding: 4px 12px;
+    border-radius: $radius-full;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__body {
+    padding: $space-3;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $gray-900;
+    @include truncate(2);
+    margin-bottom: $spacer;
+    line-height: $line-height-tight;
+
+    a {
+      color: inherit;
+      &:hover { color: $color-primary; }
+    }
+  }
+
+  &__excerpt {
+    font-size: $font-size-md;
+    color: $gray-600;
+    @include truncate(3);
+    flex: 1;
+    line-height: $line-height-loose;
+    margin-bottom: $space-2;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacer;
+    font-size: $font-size-sm;
+    color: $gray-500;
+    padding-top: $space-2;
+    border-top: 1px solid $gray-100;
+
+    time { font-weight: $font-weight-medium; }
+
+    .read-more {
+      color: $color-primary;
+      font-weight: $font-weight-semibold;
+      font-size: $font-size-sm;
+
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  &__author {
+    display: flex;
+    align-items: center;
+    gap: $spacer;
+
+    img {
+      width: 28px;
+      height: 28px;
+      border-radius: $radius-full;
+      object-fit: cover;
+    }
+  }
+}
+
+// --- App Tile (icon grid) ---
+.app-tile {
+  @include flex-center;
+  flex-direction: column;
+  gap: $space-1;
+  text-decoration: none;
+  flex-shrink: 0;
+  width: 88px;
+
+  &:hover .app-tile__icon { transform: translateY(-4px); box-shadow: $shadow-lg; }
+
+  &__icon {
+    width: 72px;
+    height: 72px;
+    background: $color-white;
+    border-radius: $radius-xl;
+    @include flex-center;
+    box-shadow: $shadow-md;
+    font-size: 36px;
+    transition: $transition-slow;
+    overflow: hidden;
+
+    img { @include img-cover; border-radius: $radius-xl; }
+  }
+
+  &__name {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $gray-800;
+    text-align: center;
+    @include truncate(2);
+    line-height: 1.3;
+  }
+}

@@ -1,0 +1,91 @@
+@use '../abstracts/variables' as *;
+
+// ============================================================
+// UTILITY CLASSES
+// ============================================================
+
+// Container
+.container {
+  max-width: $container-max;
+  margin: 0 auto;
+  padding: 0 $container-padding;
+
+  @media (max-width: #{$bp-md}) { padding: 0 $space-2; }
+}
+
+.container-wide {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 $container-padding;
+
+  @media (max-width: #{$bp-md}) { padding: 0 $space-2; }
+}
+
+// Text alignment
+.text-left    { text-align: left; }
+.text-center  { text-align: center; }
+.text-right   { text-align: right; }
+
+// Font weight
+.fw-light     { font-weight: $font-weight-light; }
+.fw-regular   { font-weight: $font-weight-regular; }
+.fw-medium    { font-weight: $font-weight-medium; }
+.fw-semibold  { font-weight: $font-weight-semibold; }
+.fw-bold      { font-weight: $font-weight-bold; }
+
+// Color
+.text-primary   { color: $color-primary; }
+.text-secondary { color: $color-secondary; }
+.text-muted     { color: $gray-500; }
+.text-dark      { color: $gray-900; }
+.text-white     { color: $color-white; }
+
+// Display
+.d-none   { display: none; }
+.d-block  { display: block; }
+.d-flex   { display: flex; }
+.d-grid   { display: grid; }
+.d-inline { display: inline; }
+.d-inline-flex { display: inline-flex; }
+
+// Flex helpers
+.flex-center  { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-wrap    { flex-wrap: wrap; }
+.gap-1  { gap: $space-1; }
+.gap-2  { gap: $space-2; }
+.gap-3  { gap: $space-3; }
+
+// Spacing
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: $space-1; }
+.mt-2 { margin-top: $space-2; }
+.mt-3 { margin-top: $space-3; }
+.mt-4 { margin-top: $space-4; }
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: $space-1; }
+.mb-2 { margin-bottom: $space-2; }
+.mb-3 { margin-bottom: $space-3; }
+.mb-4 { margin-bottom: $space-4; }
+
+// Gradient text
+.gradient-text {
+  background: $gradient-primary;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+// Responsive hidden
+@media (max-width: #{$bp-md}) {
+  .hide-mobile { display: none !important; }
+}
+@media (min-width: #{$bp-md}) {
+  .hide-desktop { display: none !important; }
+}
+
+// Sticky
+.sticky-top {
+  position: sticky;
+  top: calc(#{$nav-height} + #{$space-3});
+}

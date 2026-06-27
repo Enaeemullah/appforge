@@ -1,0 +1,158 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ============================================================
+// PAGE LAYOUT GRIDS
+// ============================================================
+
+// Main content + sidebar
+.page-layout {
+  display: grid;
+  grid-template-columns: 1fr $sidebar-width;
+  gap: $space-5;
+  padding: $space-5 0;
+
+  @include respond-to('lg') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.page-layout--no-sidebar {
+  grid-template-columns: 1fr;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+// Apps grid
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: $space-3;
+
+  @include respond-to('sm') {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $space-2;
+  }
+}
+
+// Blog posts grid
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: $space-4;
+
+  @include respond-to('md') {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Posts list (single column)
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+// Section wrapper
+.section {
+  padding: $space-7 0;
+
+  &--sm { padding: $space-5 0; }
+  &--lg { padding: $space-8 0; }
+
+  &__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: $space-2;
+    margin-bottom: $space-4;
+
+    @include respond-to('sm') { flex-direction: column; align-items: flex-start; }
+  }
+
+  &__title {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-extrabold;
+    color: $gray-900;
+    line-height: $line-height-tight;
+
+    @include respond-to('md') { font-size: $font-size-2xl; }
+  }
+
+  &__subtitle {
+    font-size: $font-size-base;
+    color: $gray-600;
+    margin-top: $spacer;
+  }
+
+  &__link {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-primary;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
+// Horizontal scroll row
+.scroll-row {
+  display: flex;
+  gap: $space-2;
+  overflow-x: auto;
+  padding-bottom: $space-1;
+  @include scrollbar;
+}
+
+// Archive header
+.archive-header {
+  background: $color-white;
+  border-radius: $radius-2xl;
+  padding: $space-5;
+  margin-bottom: $space-5;
+  border: 1px solid $gray-200;
+  box-shadow: $shadow-sm;
+
+  &__label {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: $color-primary;
+    margin-bottom: $space-1;
+  }
+
+  &__title {
+    font-size: $font-size-4xl;
+    font-weight: $font-weight-extrabold;
+    color: $gray-900;
+    margin-bottom: $spacer;
+
+    @include respond-to('md') { font-size: $font-size-3xl; }
+  }
+
+  &__desc {
+    font-size: $font-size-base;
+    color: $gray-600;
+    max-width: 600px;
+    line-height: $line-height-loose;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    margin-top: $space-2;
+    flex-wrap: wrap;
+
+    span {
+      font-size: $font-size-sm;
+      color: $gray-500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  }
+}
