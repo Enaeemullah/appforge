@@ -170,39 +170,66 @@ add_action( 'add_meta_boxes', 'appforge_meta_boxes' );
 function appforge_details_html( $post ) {
     wp_nonce_field( 'appforge_save_details', 'appforge_details_nonce' );
 
-    $fields = array(
-        '_download_url' => array( 'label' => 'Download URL', 'type' => 'url', 'placeholder' => 'https://...' ),
-        '_rating'       => array( 'label' => 'Rating (1–5)', 'type' => 'number', 'attrs' => 'step="0.1" min="0" max="5"' ),
-        '_downloads'    => array( 'label' => 'Downloads Count', 'type' => 'number' ),
-        '_app_views'    => array( 'label' => 'View Count', 'type' => 'number' ),
-        '_version'      => array( 'label' => 'App Version', 'type' => 'text', 'placeholder' => '1.0.0' ),
-        '_developer'    => array( 'label' => 'Developer Name', 'type' => 'text' ),
-        '_size'         => array( 'label' => 'File Size (e.g. 45 MB)', 'type' => 'text' ),
-        '_requires'     => array( 'label' => 'Requires Android', 'type' => 'text', 'placeholder' => '5.0+' ),
+    $inputs = array(
+        '_download_url'    => array( 'label' => 'Download URL (APK)', 'type' => 'url', 'placeholder' => 'https://...' ),
+        '_telegram_url'    => array( 'label' => 'Telegram URL', 'type' => 'url', 'placeholder' => 'https://t.me/...' ),
+        '_google_play_url' => array( 'label' => 'Google Play URL', 'type' => 'url' ),
+        '_developer_url'   => array( 'label' => 'Developer Website', 'type' => 'url' ),
+        '_rating'          => array( 'label' => 'Rating (1–5)', 'type' => 'number', 'attrs' => 'step="0.1" min="0" max="5"' ),
+        '_votes'           => array( 'label' => 'Vote Count', 'type' => 'number' ),
+        '_downloads'       => array( 'label' => 'Downloads Count', 'type' => 'number' ),
+        '_app_views'       => array( 'label' => 'View Count', 'type' => 'number' ),
+        '_version'         => array( 'label' => 'App Version', 'type' => 'text', 'placeholder' => '1.0.0' ),
+        '_developer'       => array( 'label' => 'Developer Name', 'type' => 'text' ),
+        '_size'            => array( 'label' => 'File Size (e.g. 45 MB)', 'type' => 'text' ),
+        '_requires'        => array( 'label' => 'Requires Android', 'type' => 'text', 'placeholder' => '5.0+' ),
+        '_released'        => array( 'label' => 'Release Date', 'type' => 'text', 'placeholder' => 'Jan 1, 2024' ),
+    );
+
+    $textareas = array(
+        '_whats_new' => array( 'label' => "What's New", 'placeholder' => 'Bug fixes and performance improvements...' ),
+        '_versions'  => array( 'label' => 'Version History (JSON)', 'placeholder' => '[{"version":"1.0","size":"45 MB","requirements":"5.0","date":"2024-01-01"}]' ),
     );
     ?>
     <style>
-        .appforge-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 4px 0; }
-        .appforge-meta-grid label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 12px; color: #555; text-transform: uppercase; letter-spacing: .5px; }
-        .appforge-meta-grid input { width: 100%; border: 1px solid #ddd; border-radius: 4px; padding: 6px 10px; font-size: 13px; }
-        .appforge-meta-grid input:focus { border-color: #00C853; outline: none; box-shadow: 0 0 0 2px rgba(0,200,83,.15); }
+        .af-meta { padding: 4px 0; }
+        .af-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .af-meta label { display: block; font-weight: 600; margin-bottom: 3px; font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: .5px; }
+        .af-meta input, .af-meta textarea { width: 100%; border: 1px solid #ddd; border-radius: 4px; padding: 6px 10px; font-size: 13px; box-sizing: border-box; }
+        .af-meta input:focus, .af-meta textarea:focus { border-color: #00C853; outline: none; box-shadow: 0 0 0 2px rgba(0,200,83,.15); }
+        .af-meta textarea { min-height: 80px; resize: vertical; font-family: monospace; font-size: 12px; }
+        .af-meta-ta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     </style>
-    <div class="appforge-meta-grid">
-        <?php foreach ( $fields as $key => $field ) :
-            $value = get_post_meta( $post->ID, $key, true );
-            $attrs = isset( $field['attrs'] ) ? $field['attrs'] : '';
-            $placeholder = isset( $field['placeholder'] ) ? 'placeholder="' . esc_attr( $field['placeholder'] ) . '"' : '';
-        ?>
-        <div>
-            <label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field['label'] ); ?></label>
-            <input type="<?php echo esc_attr( $field['type'] ); ?>"
-                   id="<?php echo esc_attr( $key ); ?>"
-                   name="<?php echo esc_attr( $key ); ?>"
-                   value="<?php echo esc_attr( $value ); ?>"
-                   <?php echo $attrs; ?>
-                   <?php echo $placeholder; ?>>
+    <div class="af-meta">
+        <div class="af-meta-grid">
+            <?php foreach ( $inputs as $key => $field ) :
+                $value       = get_post_meta( $post->ID, $key, true );
+                $attrs       = isset( $field['attrs'] ) ? $field['attrs'] : '';
+                $placeholder = isset( $field['placeholder'] ) ? 'placeholder="' . esc_attr( $field['placeholder'] ) . '"' : '';
+            ?>
+            <div>
+                <label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field['label'] ); ?></label>
+                <input type="<?php echo esc_attr( $field['type'] ); ?>"
+                       id="<?php echo esc_attr( $key ); ?>"
+                       name="<?php echo esc_attr( $key ); ?>"
+                       value="<?php echo esc_attr( $value ); ?>"
+                       <?php echo $attrs; ?>
+                       <?php echo $placeholder; ?>>
+            </div>
+            <?php endforeach; ?>
         </div>
-        <?php endforeach; ?>
+        <div class="af-meta-ta">
+            <?php foreach ( $textareas as $key => $field ) :
+                $value = get_post_meta( $post->ID, $key, true );
+            ?>
+            <div>
+                <label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field['label'] ); ?></label>
+                <textarea id="<?php echo esc_attr( $key ); ?>"
+                          name="<?php echo esc_attr( $key ); ?>"
+                          placeholder="<?php echo esc_attr( $field['placeholder'] ); ?>"><?php echo esc_textarea( $value ); ?></textarea>
+            </div>
+            <?php endforeach; ?>
+        </div>
     </div>
     <?php
 }
@@ -213,15 +240,23 @@ function appforge_save_details( $post_id ) {
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
     if ( ! current_user_can( 'edit_post', $post_id ) ) return;
 
-    $fields = array( '_download_url', '_rating', '_downloads', '_app_views', '_version', '_developer', '_size', '_requires' );
+    $url_fields  = array( '_download_url', '_telegram_url', '_google_play_url', '_developer_url' );
+    $text_fields = array( '_rating', '_votes', '_downloads', '_app_views', '_version', '_developer', '_size', '_requires', '_released' );
+    $ta_fields   = array( '_whats_new', '_versions' );
 
-    foreach ( $fields as $field ) {
+    foreach ( $url_fields as $field ) {
         if ( isset( $_POST[ $field ] ) ) {
-            if ( $field === '_download_url' ) {
-                update_post_meta( $post_id, $field, esc_url_raw( $_POST[ $field ] ) );
-            } else {
-                update_post_meta( $post_id, $field, sanitize_text_field( $_POST[ $field ] ) );
-            }
+            update_post_meta( $post_id, $field, esc_url_raw( $_POST[ $field ] ) );
+        }
+    }
+    foreach ( $text_fields as $field ) {
+        if ( isset( $_POST[ $field ] ) ) {
+            update_post_meta( $post_id, $field, sanitize_text_field( $_POST[ $field ] ) );
+        }
+    }
+    foreach ( $ta_fields as $field ) {
+        if ( isset( $_POST[ $field ] ) ) {
+            update_post_meta( $post_id, $field, sanitize_textarea_field( $_POST[ $field ] ) );
         }
     }
 }
@@ -365,6 +400,11 @@ function appforge_body_classes( $classes ) {
     return $classes;
 }
 add_filter( 'body_class', 'appforge_body_classes' );
+
+// ============================================================
+// ADMIN PANEL
+// ============================================================
+require_once get_template_directory() . '/inc/admin-panel.php';
 
 // ============================================================
 // CUSTOMIZER

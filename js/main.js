@@ -218,6 +218,20 @@
   }
 
   // ============================================================
+  // READ MORE — App description collapse/expand
+  // ============================================================
+  document.querySelectorAll('.app-read-more').forEach(function (btn) {
+    var targetId = btn.dataset.target;
+    var target   = targetId ? document.getElementById(targetId) : null;
+    if (!target) return;
+
+    btn.addEventListener('click', function () {
+      var expanded = target.classList.toggle('expanded');
+      btn.textContent = expanded ? 'Read less' : 'Read more';
+    });
+  });
+
+  // ============================================================
   // CARD HOVER — Tilt effect on app cards (subtle)
   // ============================================================
   document.querySelectorAll('.app-card, .post-card').forEach(function (card) {

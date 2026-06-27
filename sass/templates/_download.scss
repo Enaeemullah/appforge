@@ -1,0 +1,119 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins'   as *;
+
+// ============================================================
+// DOWNLOAD COUNTDOWN PAGE
+// ============================================================
+
+.dl-page-wrap {
+  min-height: 60vh;
+  @include flex-center;
+  padding: $space-5 $container-padding;
+  background: $gray-50;
+}
+
+.dl-card {
+  background: $color-white;
+  border: 1px solid $gray-200;
+  border-radius: $radius-2xl;
+  box-shadow: $shadow-md;
+  padding: $space-5 $space-4;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+}
+
+.dl-app-info {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  margin-bottom: $space-4;
+  text-align: left;
+}
+
+.dl-app-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: $gradient-card;
+  border: 2px solid $gray-100;
+
+  img { @include img-cover; border-radius: $radius-xl; }
+}
+
+.dl-app-meta { flex: 1; min-width: 0; }
+
+.dl-app-name {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-extrabold;
+  color: $gray-900;
+  margin: 0 0 4px;
+  @include truncate(2);
+}
+
+.dl-app-version {
+  font-size: $font-size-sm;
+  color: $gray-500;
+  margin: 0;
+}
+
+// Spinner / countdown ring
+.dl-progress-wrap {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto $space-3;
+  @include flex-center;
+}
+
+.dl-spinner {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+
+  &__track {
+    stroke: $gray-100;
+  }
+
+  &__fill {
+    stroke: $color-primary;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear;
+  }
+}
+
+.dl-countdown {
+  font-size: 28px;
+  font-weight: $font-weight-extrabold;
+  color: $gray-900;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.dl-status {
+  font-size: $font-size-sm;
+  color: $gray-500;
+  margin: 0 0 $space-3;
+}
+
+.dl-manual-btn {
+  margin: 0 auto $space-3;
+}
+
+.dl-back-link {
+  font-size: $font-size-sm;
+  color: $gray-400;
+  margin: 0;
+
+  a {
+    color: $color-primary;
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+}

@@ -1,19 +1,5 @@
 <?php get_header(); ?>
 
-<?php
-/* Check if ANY apps exist so we can show a helpful admin-only notice */
-$any_app = new WP_Query( array( 'post_type' => 'app', 'posts_per_page' => 1, 'fields' => 'ids' ) );
-$has_apps = $any_app->have_posts();
-wp_reset_postdata();
-?>
-
-<?php if ( ! $has_apps && current_user_can( 'manage_options' ) ) : ?>
-<div style="background:#fff3cd;border:1px solid #ffc107;color:#856404;padding:14px 24px;font-size:14px;text-align:center;">
-    <strong>No apps found.</strong>
-    Go to <a href="<?php echo esc_url( admin_url( 'tools.php?page=appforge-sample-data' ) ); ?>" style="color:#856404;font-weight:700;text-decoration:underline;">Tools → AppForge Sample Data</a>
-    and click <strong>Insert Sample Data</strong> to populate the site.
-</div>
-<?php endif; ?>
 
 <div class="apk-homepage">
 
@@ -95,14 +81,13 @@ wp_reset_postdata();
             'posts_per_page' => 16,
             'orderby'        => 'rand',
         ) );
-        ?>
+        if ( $discover_apps->have_posts() ) : ?>
         <section class="discover-section" aria-label="<?php esc_attr_e( 'Discover apps', 'appforge' ); ?>">
             <div class="apk-section-header">
                 <h2 class="apk-section-header__title"><?php esc_html_e( 'Discover', 'appforge' ); ?></h2>
                 <a href="<?php echo esc_url( get_post_type_archive_link( 'app' ) ); ?>"
                    class="apk-section-header__link"><?php esc_html_e( 'View All', 'appforge' ); ?></a>
             </div>
-            <?php if ( $discover_apps->have_posts() ) : ?>
             <div class="discover-row" role="list" aria-label="<?php esc_attr_e( 'App collection', 'appforge' ); ?>">
                 <?php while ( $discover_apps->have_posts() ) : $discover_apps->the_post(); ?>
                 <a href="<?php the_permalink(); ?>" class="app-tile" role="listitem"
@@ -116,10 +101,10 @@ wp_reset_postdata();
                     </div>
                     <span class="app-tile__name"><?php echo esc_html( wp_trim_words( get_the_title(), 2 ) ); ?></span>
                 </a>
-                <?php endwhile; ?>
+                <?php endwhile; wp_reset_postdata(); ?>
             </div>
-            <?php endif; wp_reset_postdata(); ?>
         </section>
+        <?php else : wp_reset_postdata(); endif; ?>
 
         <!-- ===== RANKED / POPULAR ===== -->
         <?php
@@ -139,13 +124,13 @@ wp_reset_postdata();
         wp_reset_postdata();
         $popular_apps = new WP_Query( $popular_args );
         ?>
+        <?php if ( $popular_apps->have_posts() ) : ?>
         <section class="ranked-section" aria-label="<?php esc_attr_e( 'Popular apps', 'appforge' ); ?>">
             <div class="apk-section-header">
                 <h2 class="apk-section-header__title"><?php esc_html_e( 'Most Popular', 'appforge' ); ?></h2>
                 <a href="<?php echo esc_url( get_post_type_archive_link( 'app' ) ); ?>"
                    class="apk-section-header__link"><?php esc_html_e( 'More', 'appforge' ); ?></a>
             </div>
-            <?php if ( $popular_apps->have_posts() ) : ?>
             <div class="ranked-row" role="list">
                 <?php
                 $rank = 1;
@@ -174,10 +159,10 @@ wp_reset_postdata();
                     </span>
                     <?php endif; ?>
                 </a>
-                <?php $rank++; endwhile; ?>
+                <?php $rank++; endwhile; wp_reset_postdata(); ?>
             </div>
-            <?php endif; wp_reset_postdata(); ?>
         </section>
+        <?php else : wp_reset_postdata(); endif; ?>
 
         <!-- ===== HOT APPS — 3-col grid ===== -->
         <?php
@@ -195,13 +180,13 @@ wp_reset_postdata();
         wp_reset_postdata();
         $hot_apps = new WP_Query( $hot_args );
         ?>
+        <?php if ( $hot_apps->have_posts() ) : ?>
         <section class="hot-section" aria-label="<?php esc_attr_e( 'Hot apps', 'appforge' ); ?>">
             <div class="apk-section-header">
                 <h2 class="apk-section-header__title"><?php esc_html_e( 'Hot Apps', 'appforge' ); ?></h2>
                 <a href="<?php echo esc_url( get_post_type_archive_link( 'app' ) ); ?>"
                    class="apk-section-header__link"><?php esc_html_e( 'More', 'appforge' ); ?></a>
             </div>
-            <?php if ( $hot_apps->have_posts() ) : ?>
             <div class="hot-apps-grid">
                 <?php while ( $hot_apps->have_posts() ) : $hot_apps->the_post();
                     $downloads = appforge_get_downloads();
@@ -227,10 +212,10 @@ wp_reset_postdata();
                         <?php endif; ?>
                     </div>
                 </a>
-                <?php endwhile; ?>
+                <?php endwhile; wp_reset_postdata(); ?>
             </div>
-            <?php endif; wp_reset_postdata(); ?>
         </section>
+        <?php else : wp_reset_postdata(); endif; ?>
 
         <!-- ===== LATEST UPDATE — 3-col grid ===== -->
         <?php
@@ -241,13 +226,13 @@ wp_reset_postdata();
             'order'          => 'DESC',
         ) );
         ?>
+        <?php if ( $latest_apps->have_posts() ) : ?>
         <section class="latest-section" aria-label="<?php esc_attr_e( 'Latest updates', 'appforge' ); ?>">
             <div class="apk-section-header">
                 <h2 class="apk-section-header__title"><?php esc_html_e( 'Latest Update', 'appforge' ); ?></h2>
                 <a href="<?php echo esc_url( get_post_type_archive_link( 'app' ) ); ?>"
                    class="apk-section-header__link"><?php esc_html_e( 'More', 'appforge' ); ?></a>
             </div>
-            <?php if ( $latest_apps->have_posts() ) : ?>
             <div class="latest-grid">
                 <?php while ( $latest_apps->have_posts() ) : $latest_apps->the_post();
                     $version = get_post_meta( get_the_ID(), '_version', true );
@@ -273,21 +258,26 @@ wp_reset_postdata();
                         <?php endif; ?>
                     </div>
                 </a>
-                <?php endwhile; ?>
+                <?php endwhile; wp_reset_postdata(); ?>
             </div>
-            <?php endif; wp_reset_postdata(); ?>
         </section>
+        <?php else : wp_reset_postdata(); endif; ?>
 
         <!-- ===== LATEST BLOG POSTS ===== -->
         <?php
-        $blog_posts = new WP_Query( array(
-            'post_type'      => 'post',
-            'post_status'    => 'publish',
-            'posts_per_page' => 6,
-            'orderby'        => 'date',
-            'order'          => 'DESC',
-        ) );
-        if ( $blog_posts->have_posts() ) : ?>
+        $hide_blog  = AppForge_Panel::get( 'home_hide_blog',  '0' );
+        $blog_count = (int) AppForge_Panel::get( 'home_blog_count', 6 );
+        $blog_posts = null;
+        if ( $hide_blog !== '1' ) {
+            $blog_posts = new WP_Query( array(
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $blog_count ?: 6,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+            ) );
+        }
+        if ( $blog_posts && $blog_posts->have_posts() ) : ?>
         <section class="blog-section" aria-label="<?php esc_attr_e( 'Latest posts', 'appforge' ); ?>">
             <div class="apk-section-header">
                 <h2 class="apk-section-header__title"><?php esc_html_e( 'Latest Posts', 'appforge' ); ?></h2>
