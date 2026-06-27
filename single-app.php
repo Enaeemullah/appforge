@@ -18,8 +18,14 @@
     $rating        = appforge_get_rating();
     $downloads     = appforge_get_downloads();
     $updated       = get_the_modified_date( 'M j, Y' );
-    $categories    = get_the_terms( $post_id, 'app_category' );
-    $first_cat     = ( $categories && ! is_wp_error( $categories ) ) ? $categories[0] : null;
+    $categories = get_the_terms( $post_id, 'app_category' );
+    if ( ! $categories || is_wp_error( $categories ) ) {
+        // Fallback: use standard post categories
+        $wp_cats    = get_the_category( $post_id );
+        $categories = $wp_cats ?: array();
+    }
+    $first_cat = ! empty( $categories ) ? $categories[0] : null;
+    // For standard categories, get_term_link() works on both WP_Term objects
     $versions_list = $versions_raw ? json_decode( $versions_raw, true ) : array();
     $share_url     = urlencode( get_permalink() );
     $share_title   = urlencode( get_the_title() );

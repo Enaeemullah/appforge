@@ -165,13 +165,35 @@ add_action( 'init', 'appforge_register_apps' );
 require_once get_template_directory() . '/inc/meta-boxes.php';
 
 // ============================================================
+// AUTO-ROUTE: regular Posts with APK meta → single-app.php
+// ============================================================
+add_filter( 'template_include', function ( $template ) {
+    if ( is_singular( 'post' ) ) {
+        global $post;
+        $has_app = get_post_meta( $post->ID, '_download_url',   true )
+                || get_post_meta( $post->ID, '_download_links', true );
+        if ( $has_app ) {
+            $t = get_template_directory() . '/single-app.php';
+            if ( file_exists( $t ) ) return $t;
+        }
+    }
+    return $template;
+}, 99 );
+
+// ============================================================
 // APP VIEW COUNTER
 // ============================================================
 function appforge_track_app_views() {
-    if ( ! is_singular( 'app' ) ) return;
+    if ( ! is_singular( array( 'app', 'post' ) ) ) return;
 
     $post_id = get_the_ID();
-    $views   = (int) get_post_meta( $post_id, '_app_views', true );
+    // For regular posts, only track if it has APK download meta
+    if ( is_singular( 'post' ) && ! get_post_meta( $post_id, '_download_url', true )
+         && ! get_post_meta( $post_id, '_download_links', true ) ) {
+        return;
+    }
+
+    $views = (int) get_post_meta( $post_id, '_app_views', true );
     update_post_meta( $post_id, '_app_views', $views + 1 );
 }
 add_action( 'wp', 'appforge_track_app_views' );
@@ -241,12 +263,24 @@ function appforge_breadcrumbs() {
         $terms = get_the_terms( get_the_ID(), 'app_category' );
         if ( $terms && ! is_wp_error( $terms ) ) {
             $items[] = '<a href="' . esc_url( get_term_link( $terms[0] ) ) . '" class="breadcrumb__link">' . esc_html( $terms[0]->name ) . '</a>';
+        } else {
+            $arc = get_post_type_archive_link( 'app' );
+            if ( $arc ) $items[] = '<a href="' . esc_url( $arc ) . '" class="breadcrumb__link">' . esc_html__( 'Apps', 'appforge' ) . '</a>';
         }
         $items[] = '<span class="breadcrumb__current" aria-current="page">' . esc_html( get_the_title() ) . '</span>';
     } elseif ( is_single() ) {
-        $cat = get_the_category();
-        if ( $cat ) {
-            $items[] = '<a href="' . esc_url( get_category_link( $cat[0]->term_id ) ) . '" class="breadcrumb__link">' . esc_html( $cat[0]->name ) . '</a>';
+        // Regular post used as APK: show Apps archive link
+        $post_id = get_the_ID();
+        $is_app_post = get_post_meta( $post_id, '_download_url', true )
+                    || get_post_meta( $post_id, '_download_links', true );
+        if ( $is_app_post ) {
+            $arc = get_post_type_archive_link( 'app' );
+            if ( $arc ) $items[] = '<a href="' . esc_url( $arc ) . '" class="breadcrumb__link">' . esc_html__( 'Apps', 'appforge' ) . '</a>';
+        } else {
+            $cat = get_the_category();
+            if ( $cat ) {
+                $items[] = '<a href="' . esc_url( get_category_link( $cat[0]->term_id ) ) . '" class="breadcrumb__link">' . esc_html( $cat[0]->name ) . '</a>';
+            }
         }
         $items[] = '<span class="breadcrumb__current" aria-current="page">' . esc_html( get_the_title() ) . '</span>';
     } elseif ( is_category() ) {

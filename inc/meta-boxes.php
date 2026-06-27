@@ -6,15 +6,16 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 // ================================================================
-// REGISTER META BOXES
+// REGISTER META BOXES — for both 'app' CPT and regular 'post'
 // ================================================================
 add_action( 'add_meta_boxes', function () {
-    $post_type = 'app';
-    add_meta_box( 'af_mb_versions',  __( 'Versions', 'appforge' ),              'af_mb_versions_html',  $post_type, 'normal', 'high' );
-    add_meta_box( 'af_mb_info',      __( 'App Information', 'appforge' ),        'af_mb_info_html',      $post_type, 'normal', 'high' );
-    add_meta_box( 'af_mb_download',  __( 'Download links of app', 'appforge' ),  'af_mb_download_html',  $post_type, 'normal', 'high' );
-    add_meta_box( 'af_mb_images',    __( 'App Images', 'appforge' ),             'af_mb_images_html',    $post_type, 'normal', 'default' );
-    add_meta_box( 'af_mb_video',     __( 'App Video', 'appforge' ),              'af_mb_video_html',     $post_type, 'normal', 'default' );
+    foreach ( array( 'app', 'post' ) as $pt ) {
+        add_meta_box( 'af_mb_versions_' . $pt,  __( 'Versions', 'appforge' ),              'af_mb_versions_html',  $pt, 'normal', 'high' );
+        add_meta_box( 'af_mb_info_' . $pt,      __( 'App Information', 'appforge' ),        'af_mb_info_html',      $pt, 'normal', 'high' );
+        add_meta_box( 'af_mb_download_' . $pt,  __( 'Download links of app', 'appforge' ),  'af_mb_download_html',  $pt, 'normal', 'high' );
+        add_meta_box( 'af_mb_images_' . $pt,    __( 'App Images', 'appforge' ),             'af_mb_images_html',    $pt, 'normal', 'default' );
+        add_meta_box( 'af_mb_video_' . $pt,     __( 'App Video', 'appforge' ),              'af_mb_video_html',     $pt, 'normal', 'default' );
+    }
 } );
 
 // ================================================================
@@ -23,14 +24,10 @@ add_action( 'add_meta_boxes', function () {
 add_action( 'admin_enqueue_scripts', function ( $hook ) {
     if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ), true ) ) return;
     global $post;
-    if ( ! $post || $post->post_type !== 'app' ) return;
+    if ( ! $post || ! in_array( $post->post_type, array( 'app', 'post' ), true ) ) return;
 
     wp_enqueue_media();
-
-    // CSS
     wp_add_inline_style( 'wp-admin', af_mb_css() );
-
-    // JS — needs jQuery (wp-admin already loads it)
     wp_add_inline_script( 'jquery', af_mb_js() );
 } );
 
@@ -657,14 +654,15 @@ function af_mb_video_html( $post ) {
 }
 
 // ================================================================
-// SAVE
+// SAVE — fires for both 'app' and 'post' types
 // ================================================================
-add_action( 'save_post_app', 'af_mb_save' );
+add_action( 'save_post', 'af_mb_save' );
 function af_mb_save( $post_id ) {
     if ( ! isset( $_POST['af_mb_nonce'] ) ) return;
     if ( ! wp_verify_nonce( $_POST['af_mb_nonce'], 'af_mb_save' ) ) return;
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
     if ( ! current_user_can( 'edit_post', $post_id ) ) return;
+    if ( ! in_array( get_post_type( $post_id ), array( 'app', 'post' ), true ) ) return;
 
     /* ---- Versions ---- */
     $versions = array();
