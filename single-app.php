@@ -278,8 +278,7 @@
                         <thead>
                             <tr>
                                 <th><?php esc_html_e( 'Version', 'appforge' ); ?></th>
-                                <th><?php esc_html_e( 'Size', 'appforge' ); ?></th>
-                                <th><?php esc_html_e( 'Requirements', 'appforge' ); ?></th>
+                                <th><?php esc_html_e( 'Title', 'appforge' ); ?></th>
                                 <th><?php esc_html_e( 'Date', 'appforge' ); ?></th>
                             </tr>
                         </thead>
@@ -287,13 +286,51 @@
                             <?php foreach ( $versions_list as $ver ) : ?>
                             <tr>
                                 <td><?php echo esc_html( $ver['version'] ?? '' ); ?></td>
-                                <td><?php echo esc_html( $ver['size'] ?? '' ); ?></td>
-                                <td><?php echo esc_html( $ver['requirements'] ?? '' ); ?></td>
+                                <td><?php echo esc_html( $ver['title'] ?? ( $ver['size'] ?? '' ) ); ?></td>
                                 <td><?php echo esc_html( $ver['date'] ?? '' ); ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- SCREENSHOTS -->
+            <?php
+            $screens_raw  = get_post_meta( $post_id, '_app_screenshots', true );
+            $screenshots  = $screens_raw ? json_decode( $screens_raw, true ) : array();
+            $screenshots  = is_array( $screenshots ) ? array_filter( $screenshots ) : array();
+            if ( ! empty( $screenshots ) ) : ?>
+            <div class="app-section">
+                <div class="app-section__hd">
+                    <h2 class="app-section__title"><?php esc_html_e( 'Screenshots', 'appforge' ); ?></h2>
+                </div>
+                <div class="app-section__body">
+                    <div class="app-screenshots-row">
+                        <?php foreach ( $screenshots as $src ) : ?>
+                        <a href="<?php echo esc_url( $src ); ?>" class="app-screenshot-thumb" target="_blank" rel="noopener">
+                            <img src="<?php echo esc_url( $src ); ?>" alt="<?php esc_attr_e( 'Screenshot', 'appforge' ); ?>" loading="lazy" />
+                        </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- YOUTUBE VIDEO -->
+            <?php $yt_id = get_post_meta( $post_id, '_youtube_id', true ); ?>
+            <?php if ( $yt_id ) : ?>
+            <div class="app-section">
+                <div class="app-section__hd">
+                    <h2 class="app-section__title"><?php esc_html_e( 'Video', 'appforge' ); ?></h2>
+                </div>
+                <div class="app-section__body" style="padding:0;">
+                    <div class="app-yt-wrap">
+                        <iframe src="https://www.youtube.com/embed/<?php echo esc_attr( $yt_id ); ?>?rel=0"
+                                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen loading="lazy" title="<?php the_title_attribute(); ?>"></iframe>
+                    </div>
                 </div>
             </div>
             <?php endif; ?>
