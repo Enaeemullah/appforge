@@ -6,15 +6,17 @@
 // ============================================================
 
 .site-footer {
-  background: $color-dark;
-  color: $gray-400;
+  background: $footer-bg;
+  color: $footer-text;
   margin-top: $space-8;
   padding-top: $space-8;
+  border-top: 1px solid $footer-border;
+  box-shadow: $footer-shadow;
 }
 
 .footer-top {
   padding-bottom: $space-7;
-  border-bottom: 1px solid rgba($color-white, 0.08);
+  border-bottom: 1px solid $footer-border;
 }
 
 .footer-grid {
@@ -22,11 +24,19 @@
   grid-template-columns: 2fr repeat(3, 1fr);
   gap: $space-5;
 
-  @include respond-to('lg') { grid-template-columns: 1fr 1fr; }
-  @include respond-to('md') { grid-template-columns: 1fr; }
+  @include respond-to('lg') {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include respond-to('md') {
+    grid-template-columns: 1fr;
+  }
 }
 
-// Footer brand column
+// ============================================================
+// Footer Brand
+// ============================================================
+
 .footer-brand {
   .footer-logo {
     display: flex;
@@ -47,15 +57,17 @@
   .footer-logo-text {
     font-size: 20px;
     font-weight: $font-weight-extrabold;
-    color: $color-white;
+    color: $footer-heading;
 
-    span { color: $color-primary; }
+    span {
+      color: $color-primary;
+    }
   }
 
   p {
     font-size: $font-size-sm;
     line-height: $line-height-loose;
-    color: $gray-500;
+    color: $footer-link;
     max-width: 260px;
     margin-bottom: $space-3;
   }
@@ -68,11 +80,11 @@
   .social-btn {
     width: 36px;
     height: 36px;
-    background: rgba($color-white, 0.06);
-    border: 1px solid rgba($color-white, 0.1);
+    background: $footer-social-bg;
+    border: 1px solid $footer-social-border;
     border-radius: $radius-full;
     @include flex-center;
-    color: $gray-400;
+    color: $footer-social-icon;
     text-decoration: none;
     font-size: 16px;
     transition: $transition-base;
@@ -86,12 +98,15 @@
   }
 }
 
-// Footer nav columns
+// ============================================================
+// Footer Columns
+// ============================================================
+
 .footer-col {
   h5 {
     font-size: $font-size-sm;
     font-weight: $font-weight-bold;
-    color: $color-white;
+    color: $footer-heading;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: $space-2;
@@ -103,22 +118,29 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding: 0;
+    margin: 0;
   }
 
   a {
-    font-size: $font-size-sm;
-    color: $gray-500;
-    text-decoration: none;
-    transition: color 0.2s;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    font-size: $font-size-sm;
+    color: $footer-link;
+    text-decoration: none;
+    transition: $transition-base;
 
-    &:hover { color: $color-primary; }
+    &:hover {
+      color: $footer-link-hover;
+    }
   }
 }
 
-// Footer bottom bar
+// ============================================================
+// Footer Bottom
+// ============================================================
+
 .footer-bottom {
   display: flex;
   align-items: center;
@@ -133,9 +155,9 @@
   }
 
   p {
-    font-size: $font-size-sm;
-    color: $gray-600;
     margin: 0;
+    font-size: $font-size-sm;
+    color: $footer-link;
   }
 
   nav {
@@ -147,27 +169,35 @@
 
   nav a {
     font-size: $font-size-sm;
-    color: $gray-600;
+    color: $footer-link;
     text-decoration: none;
+    transition: $transition-base;
 
-    &:hover { color: $color-primary; }
+    &:hover {
+      color: $footer-link-hover;
+    }
   }
 }
 
 .footer-credit {
   font-size: $font-size-sm;
-  color: $gray-600;
+  color: $footer-link;
 
   a {
     color: $color-primary;
     text-decoration: none;
     font-weight: $font-weight-semibold;
 
-    &:hover { text-decoration: underline; }
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
-// Back to top button
+// ============================================================
+// Back To Top
+// ============================================================
+
 .back-to-top {
   @include btn-reset;
   position: fixed;
@@ -197,5 +227,8 @@
     transform: translateY(-2px);
   }
 
-  svg { width: 20px; height: 20px; }
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 }
