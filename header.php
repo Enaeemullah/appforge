@@ -20,8 +20,7 @@
                 the_custom_logo();
             else : ?>
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-                <span class="logo-icon" aria-hidden="true">⚡</span>
-                <span class="logo-text">App<span>Forge</span></span>
+                <span class="logo-text">APPFORGE</span>
             </a>
             <?php endif; ?>
         </div>

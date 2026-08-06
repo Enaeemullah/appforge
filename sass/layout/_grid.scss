@@ -106,7 +106,55 @@
   @include scrollbar;
 }
 
-// Archive header
+// ============================================================
+// BREADCRUMBS
+// ============================================================
+.breadcrumbs {
+  margin-bottom: $space-3;
+}
+
+.breadcrumbs__list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: $font-size-xs;
+  color: $gray-400;
+}
+
+.breadcrumbs__item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.breadcrumb__link {
+  color: $gray-500;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover { color: $color-primary; }
+}
+
+.breadcrumb__sep {
+  color: $gray-300;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.breadcrumb__current {
+  color: $gray-700;
+  font-weight: $font-weight-medium;
+  @include truncate(1);
+  max-width: 240px;
+}
+
+// ============================================================
+// ARCHIVE HEADER
+// ============================================================
 .archive-header {
   background: $color-white;
   border-radius: $radius-2xl;
