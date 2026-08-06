@@ -9,8 +9,7 @@
                 <!-- Brand Column -->
                 <div class="footer-brand">
                     <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="footer-logo" rel="home">
-                        <span class="footer-logo-icon" aria-hidden="true">⚡</span>
-                        <span class="footer-logo-text">App<span>Forge</span></span>
+                        <span class="footer-logo-text">APPFORGE</span>
                     </a>
                     <p><?php echo esc_html( get_theme_mod( 'appforge_footer_about', __( 'Your trusted source for safe, fast, and free app downloads. Handpicked and verified.', 'appforge' ) ) ); ?></p>
                     <?php
