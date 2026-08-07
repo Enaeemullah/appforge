@@ -32,6 +32,7 @@ Tags: custom-logo, custom-colors, custom-menu, featured-images, responsive-layou
 @use 'components/forms';
 @use 'components/pagination';
 @use 'components/sidebar';
+@use 'components/modal';
 
 // 4. Layout
 @use 'layout/header';

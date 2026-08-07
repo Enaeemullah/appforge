@@ -34,7 +34,7 @@
         <p><?php esc_html_e( 'Try browsing these categories:', 'appforge' ); ?></p>
         <div class="tags-cloud" style="justify-content:center;">
             <?php foreach ( $suggestion_cats as $cat ) : ?>
-            <a href="<?php echo esc_url( get_term_link( $cat ) ); ?>" class="tag"><?php echo esc_html( $cat->name ); ?></a>
+            <a href="<?php echo esc_url( get_term_link( $cat ) ); ?>" class="tag-pill"><?php echo esc_html( $cat->name ); ?></a>
             <?php endforeach; ?>
         </div>
     </div>

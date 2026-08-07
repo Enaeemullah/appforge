@@ -27,6 +27,20 @@
 }
 
 // Logo
+.nav-logo {
+  flex-shrink: 0;
+
+  img {
+    display: block;
+    width: auto;
+    max-height: 32px;
+  }
+
+  @media (max-width: #{$bp-md}) {
+    img { max-height: 26px; }
+  }
+}
+
 .nav-logo a {
   display: flex;
   align-items: center;
@@ -100,11 +114,12 @@
   align-items: center;
   width: 210px;
   max-width: 210px;
+  min-width: 0;
   margin-left: auto;
   border: 1.5px solid $gray-300;
   border-radius: $radius-sm;
   background: $color-white;
-  flex-shrink: 0;
+  flex-shrink: 1;
   transition: max-width 0.25s ease, margin 0.25s ease, border-color 0.2s;
 
   &:focus-within,
@@ -116,6 +131,8 @@
     width: 100%;
     max-width: 720px;
     margin: 0 auto;
+    flex-shrink: 1;
+    min-width: 0;
   }
 
   button[type="submit"] {
@@ -153,11 +170,39 @@
 
 // Category nav bar (below main header)
 .cat-nav-bar {
-  background: $color-white;
-  border-bottom: 1px solid $gray-200;
   position: sticky;
   top: $nav-height;
   z-index: $z-sticky;
+  background: $color-white;
+  border-bottom: 1px solid $gray-200;
+
+  // Edge fades hinting there's more to scroll — hidden until JS
+  // detects actual overflow, so a short list shows no fade at all.
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 1px;
+    width: 28px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+
+  &::before {
+    left: 0;
+    background: linear-gradient(to right, $color-white, rgba($color-white, 0));
+  }
+
+  &::after {
+    right: 0;
+    background: linear-gradient(to left, $color-white, rgba($color-white, 0));
+  }
+
+  &.has-scroll-left::before { opacity: 1; }
+  &.has-scroll-right::after { opacity: 1; }
 }
 
 .cat-nav-inner {

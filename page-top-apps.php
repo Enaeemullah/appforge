@@ -7,7 +7,9 @@ get_header(); ?>
 <div class="container">
     <h1 class="page-title">⭐ Top Rated Apps</h1>
     <p class="page-subtitle">Highest rated apps by our community</p>
-    
+
+    <?php get_template_part( 'template-parts/app-filter-bar' ); ?>
+
     <div class="apps-grid">
         <?php
         $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
@@ -26,6 +28,7 @@ get_header(); ?>
                 )
             )
         );
+        $top_rated = appforge_app_filter_args( $top_rated );
         $query = new WP_Query($top_rated);
         
         if ($query->have_posts()) :

@@ -78,7 +78,7 @@
         <?php
         $discover_apps = new WP_Query( array(
             'post_type'      => 'app',
-            'posts_per_page' => 12,
+            'posts_per_page' => 18,
             'orderby'        => 'rand',
         ) );
         if ( $discover_apps->have_posts() ) : ?>

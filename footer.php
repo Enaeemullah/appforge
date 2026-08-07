@@ -9,19 +9,16 @@
 <!-- Brand Column -->
 <div class="footer-brand">
 
-    <?php if ( has_custom_logo() ) : ?>
-
-        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="footer-logo" rel="home">
-            <?php the_custom_logo(); ?>
-        </a>
-
-    <?php else : ?>
-
-        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="footer-logo" rel="home">
-            <span class="footer-logo-text"><?php bloginfo( 'name' ); ?></span>
-        </a>
-
-    <?php endif; ?>
+    <div class="footer-logo">
+        <?php if ( has_custom_logo() ) :
+            the_custom_logo();
+        else : ?>
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+                <span class="footer-logo-icon" aria-hidden="true">⚡</span>
+                <span class="footer-logo-text">App<span><?php esc_html_e( 'Forge', 'appforge' ); ?></span></span>
+            </a>
+        <?php endif; ?>
+    </div>
 
     <p>
         <?php
@@ -97,12 +94,28 @@
                             'depth'          => 1,
                             'fallback_cb'    => false,
                         ) );
-                    else : ?>
+                    else :
+                        $quick_links = array(
+                            array( 'label' => __( 'Home', 'appforge' ),          'url' => home_url( '/' ) ),
+                            array( 'label' => __( 'All Apps', 'appforge' ),      'url' => get_post_type_archive_link( 'app' ) ),
+                            array( 'label' => __( 'Hot Apps', 'appforge' ),      'url' => appforge_page_url_by_template( 'page-hot-apps.php' ) ),
+                            array( 'label' => __( 'Popular Apps', 'appforge' ),  'url' => appforge_page_url_by_template( 'page-popular-apps.php' ) ),
+                            array( 'label' => __( 'Latest Apps', 'appforge' ),   'url' => appforge_page_url_by_template( 'page-latest-apps.php' ) ),
+                            array( 'label' => __( 'Top Rated Apps', 'appforge' ), 'url' => appforge_page_url_by_template( 'page-top-apps.php' ) ),
+                        );
+                        if ( 'page' === get_option( 'show_on_front' ) && get_option( 'page_for_posts' ) ) {
+                            $quick_links[] = array(
+                                'label' => __( 'Blog', 'appforge' ),
+                                'url'   => get_permalink( get_option( 'page_for_posts' ) ),
+                            );
+                        }
+                    ?>
                     <ul>
-                        <li><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'appforge' ); ?></a></li>
-                        <li><a href="<?php echo esc_url( get_post_type_archive_link( 'app' ) ); ?>"><?php esc_html_e( 'All Apps', 'appforge' ); ?></a></li>
-                        <li><a href="<?php echo esc_url( get_tag_link( 'hot' ) ); ?>"><?php esc_html_e( 'Hot Apps', 'appforge' ); ?></a></li>
-                        <li><a href="<?php echo esc_url( home_url( '/blog/' ) ); ?>"><?php esc_html_e( 'Blog', 'appforge' ); ?></a></li>
+                        <?php foreach ( $quick_links as $link ) :
+                            if ( empty( $link['url'] ) ) continue;
+                        ?>
+                        <li><a href="<?php echo esc_url( $link['url'] ); ?>"><?php echo esc_html( $link['label'] ); ?></a></li>
+                        <?php endforeach; ?>
                     </ul>
                     <?php endif; ?>
                 </div>
@@ -143,13 +156,21 @@
                             'depth'          => 1,
                             'fallback_cb'    => false,
                         ) );
-                    else : ?>
+                    else :
+                        $support_links = array(
+                            array( 'label' => __( 'Help Center', 'appforge' ),    'url' => appforge_page_url_by_slug( 'help' ) ),
+                            array( 'label' => __( 'Contact Us', 'appforge' ),     'url' => appforge_page_url_by_slug( 'contact' ) ),
+                            array( 'label' => __( 'Privacy Policy', 'appforge' ), 'url' => get_privacy_policy_url() ),
+                            array( 'label' => __( 'Terms of Use', 'appforge' ),   'url' => appforge_page_url_by_slug( 'terms' ) ),
+                            array( 'label' => __( 'DMCA', 'appforge' ),           'url' => appforge_page_url_by_slug( 'dmca' ) ),
+                        );
+                    ?>
                     <ul>
-                        <li><a href="<?php echo esc_url( home_url( '/help/' ) ); ?>"><?php esc_html_e( 'Help Center', 'appforge' ); ?></a></li>
-                        <li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact Us', 'appforge' ); ?></a></li>
-                        <li><a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>"><?php esc_html_e( 'Privacy Policy', 'appforge' ); ?></a></li>
-                        <li><a href="<?php echo esc_url( home_url( '/terms/' ) ); ?>"><?php esc_html_e( 'Terms of Use', 'appforge' ); ?></a></li>
-                        <li><a href="<?php echo esc_url( home_url( '/dmca/' ) ); ?>"><?php esc_html_e( 'DMCA', 'appforge' ); ?></a></li>
+                        <?php foreach ( $support_links as $link ) :
+                            if ( empty( $link['url'] ) ) continue;
+                        ?>
+                        <li><a href="<?php echo esc_url( $link['url'] ); ?>"><?php echo esc_html( $link['label'] ); ?></a></li>
+                        <?php endforeach; ?>
                     </ul>
                     <?php endif; ?>
                 </div>
@@ -176,12 +197,10 @@
 
         <nav aria-label="<?php esc_attr_e( 'Legal links', 'appforge' ); ?>">
 
-            <?php if ( AppForge_Panel::get( 'footer_show_credit', '1' ) === '1' ) : ?>
-
-                <?php
-                $author_name = 'Naeem Ullah';
-                $author_url  = 'https://naeem-ullah.com';
-                ?>
+            <?php if ( AppForge_Panel::get( 'footer_show_credit', '1' ) === '1' ) :
+                $author_name = get_theme_mod( 'appforge_author_name', 'Naeem Ullah' );
+                $author_url  = get_theme_mod( 'appforge_author_website', 'https://naeem-ullah.com' );
+            ?>
 
                 <span class="footer-credit">
                     <?php esc_html_e( 'Designed by', 'appforge' ); ?>
@@ -192,17 +211,25 @@
 
             <?php endif; ?>
 
-            <a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>">
+            <?php $privacy_url = get_privacy_policy_url();
+            if ( $privacy_url ) : ?>
+            <a href="<?php echo esc_url( $privacy_url ); ?>">
                 <?php esc_html_e( 'Privacy', 'appforge' ); ?>
             </a>
+            <?php endif; ?>
 
-            <a href="<?php echo esc_url( home_url( '/terms/' ) ); ?>">
+            <?php $terms_url = appforge_page_url_by_slug( 'terms' );
+            if ( $terms_url ) : ?>
+            <a href="<?php echo esc_url( $terms_url ); ?>">
                 <?php esc_html_e( 'Terms', 'appforge' ); ?>
             </a>
+            <?php endif; ?>
 
-            <a href="<?php echo esc_url( home_url( '/sitemap.xml' ) ); ?>">
+            <?php if ( function_exists( 'wp_sitemaps_enabled' ) && wp_sitemaps_enabled() ) : ?>
+            <a href="<?php echo esc_url( home_url( '/wp-sitemap.xml' ) ); ?>">
                 <?php esc_html_e( 'Sitemap', 'appforge' ); ?>
             </a>
+            <?php endif; ?>
 
         </nav>
 

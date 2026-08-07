@@ -30,6 +30,94 @@
     $share_url     = urlencode( get_permalink() );
     $share_title   = urlencode( get_the_title() );
 
+    // Pre-fetch everything a lower section needs, so the table of
+    // contents (built next) knows exactly which sections will render.
+    $screens_raw  = get_post_meta( $post_id, '_app_screenshots', true );
+    $screenshots  = $screens_raw ? json_decode( $screens_raw, true ) : array();
+    $screenshots  = is_array( $screenshots ) ? array_filter( $screenshots ) : array();
+    $yt_id        = get_post_meta( $post_id, '_youtube_id', true );
+
+    $reviews      = get_comments( array( 'post_id' => $post_id, 'status' => 'approve', 'order' => 'DESC' ) );
+    $rating_sum   = 0;
+    $rating_count = 0;
+    $breakdown    = array( 5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0 );
+    foreach ( $reviews as $review ) {
+        $r = (int) get_comment_meta( $review->comment_ID, 'rating', true );
+        if ( $r >= 1 && $r <= 5 ) {
+            $rating_sum += $r;
+            $rating_count++;
+            $breakdown[ $r ]++;
+        }
+    }
+    $avg_rating = $rating_count ? round( $rating_sum / $rating_count, 1 ) : 0;
+
+    $dev_apps = null;
+    if ( $developer ) {
+        $dev_apps = new WP_Query( array(
+            'post_type'      => 'app',
+            'posts_per_page' => 4,
+            'post__not_in'   => array( $post_id ),
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'meta_query'     => array( array(
+                'key'   => '_developer',
+                'value' => $developer,
+            ) ),
+        ) );
+    }
+
+    $related_cat_terms = get_the_terms( $post_id, 'app_category' );
+    $related_term_ids  = ( $related_cat_terms && ! is_wp_error( $related_cat_terms ) )
+        ? wp_list_pluck( $related_cat_terms, 'term_id' )
+        : array();
+
+    $related_args = array(
+        'post_type'      => 'app',
+        'posts_per_page' => 4,
+        'post__not_in'   => array( $post_id ),
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    );
+    if ( ! empty( $related_term_ids ) ) {
+        $related_args['tax_query'] = array( array(
+            'taxonomy' => 'app_category',
+            'field'    => 'term_id',
+            'terms'    => $related_term_ids,
+        ) );
+    }
+    $related_apps = new WP_Query( $related_args );
+    if ( ! $related_apps->have_posts() && ! empty( $related_term_ids ) ) {
+        $related_apps = new WP_Query( array(
+            'post_type'      => 'app',
+            'posts_per_page' => 4,
+            'post__not_in'   => array( $post_id ),
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        ) );
+    }
+
+    // Table of contents — jump-nav to whichever sections actually render below.
+    $toc_items = array( array( 'slug' => 'description', 'text' => __( 'Description', 'appforge' ) ) );
+    if ( $whats_new ) {
+        $toc_items[] = array( 'slug' => 'whats-new', 'text' => __( "What's New", 'appforge' ) );
+    }
+    if ( ! empty( $versions_list ) ) {
+        $toc_items[] = array( 'slug' => 'versions', 'text' => __( 'Versions', 'appforge' ) );
+    }
+    if ( ! empty( $screenshots ) ) {
+        $toc_items[] = array( 'slug' => 'screenshots', 'text' => __( 'Screenshots', 'appforge' ) );
+    }
+    if ( $yt_id ) {
+        $toc_items[] = array( 'slug' => 'video', 'text' => __( 'Video', 'appforge' ) );
+    }
+    $toc_items[] = array( 'slug' => 'reviews', 'text' => __( 'Reviews', 'appforge' ) );
+    if ( $developer && $dev_apps && $dev_apps->have_posts() ) {
+        $toc_items[] = array( 'slug' => 'more-from-developer', 'text' => sprintf( __( 'More from %s', 'appforge' ), $developer ) );
+    }
+    if ( $related_apps->have_posts() ) {
+        $toc_items[] = array( 'slug' => 'similar-apps', 'text' => __( 'Similar Apps', 'appforge' ) );
+    }
+
     // Panel settings
     $dl_type       = AppForge_Panel::get( 'single_dl_type',      'normal' );
     $read_more     = AppForge_Panel::get( 'single_read_more',     'collapsed' );
@@ -130,7 +218,7 @@
                             </div>
                             <?php endif; ?>
 
-                            <button class="app-report-link" type="button" onclick="alert('<?php esc_attr_e( 'Thank you for your report. We will review this app.', 'appforge' ); ?>')">
+                            <button class="app-report-link" type="button" data-report-open>
                                 ⚑ <?php esc_html_e( 'Report', 'appforge' ); ?>
                             </button>
 
@@ -240,6 +328,25 @@
 
             </div><!-- .app-header-card -->
 
+            <!-- TABLE OF CONTENTS -->
+            <?php if ( ! empty( $toc_items ) ) : ?>
+            <nav class="toc" aria-label="<?php esc_attr_e( 'Table of contents', 'appforge' ); ?>">
+                <button type="button" class="toc__toggle" aria-expanded="true">
+                    <span class="toc__title"><?php esc_html_e( 'Table of Contents', 'appforge' ); ?></span>
+                    <svg class="toc__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+                <div class="toc__body">
+                    <ol class="toc__list">
+                        <?php foreach ( $toc_items as $item ) : ?>
+                        <li class="toc__item"><a href="#<?php echo esc_attr( $item['slug'] ); ?>"><?php echo esc_html( $item['text'] ); ?></a></li>
+                        <?php endforeach; ?>
+                    </ol>
+                </div>
+            </nav>
+            <?php endif; ?>
+
             <!-- DESCRIPTION -->
             <div class="app-section" id="description">
                 <div class="app-section__hd">
@@ -261,7 +368,7 @@
 
             <!-- WHAT'S NEW -->
             <?php if ( $whats_new ) : ?>
-            <div class="app-section">
+            <div class="app-section" id="whats-new">
                 <div class="app-section__hd">
                     <h2 class="app-section__title"><?php esc_html_e( "What's New", 'appforge' ); ?></h2>
                 </div>
@@ -275,7 +382,7 @@
 
             <!-- VERSIONS TABLE -->
             <?php if ( ! empty( $versions_list ) ) : ?>
-            <div class="app-section">
+            <div class="app-section" id="versions">
                 <div class="app-section__hd">
                     <h2 class="app-section__title"><?php esc_html_e( 'Versions', 'appforge' ); ?></h2>
                 </div>
@@ -303,12 +410,8 @@
             <?php endif; ?>
 
             <!-- SCREENSHOTS -->
-            <?php
-            $screens_raw  = get_post_meta( $post_id, '_app_screenshots', true );
-            $screenshots  = $screens_raw ? json_decode( $screens_raw, true ) : array();
-            $screenshots  = is_array( $screenshots ) ? array_filter( $screenshots ) : array();
-            if ( ! empty( $screenshots ) ) : ?>
-            <div class="app-section">
+            <?php if ( ! empty( $screenshots ) ) : ?>
+            <div class="app-section" id="screenshots">
                 <div class="app-section__hd">
                     <h2 class="app-section__title"><?php esc_html_e( 'Screenshots', 'appforge' ); ?></h2>
                 </div>
@@ -325,9 +428,8 @@
             <?php endif; ?>
 
             <!-- YOUTUBE VIDEO -->
-            <?php $yt_id = get_post_meta( $post_id, '_youtube_id', true ); ?>
             <?php if ( $yt_id ) : ?>
-            <div class="app-section">
+            <div class="app-section" id="video">
                 <div class="app-section__hd">
                     <h2 class="app-section__title"><?php esc_html_e( 'Video', 'appforge' ); ?></h2>
                 </div>
@@ -336,6 +438,109 @@
                         <iframe src="https://www.youtube.com/embed/<?php echo esc_attr( $yt_id ); ?>?rel=0"
                                 frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen loading="lazy" title="<?php the_title_attribute(); ?>"></iframe>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- REVIEWS -->
+            <div class="app-section" id="reviews">
+                <div class="app-section__hd">
+                    <h2 class="app-section__title"><?php esc_html_e( 'Reviews', 'appforge' ); ?></h2>
+                </div>
+                <div class="app-section__body">
+
+                    <?php if ( $rating_count ) : ?>
+                    <div class="review-summary">
+                        <div class="review-summary__score">
+                            <span class="review-summary__avg"><?php echo esc_html( $avg_rating ); ?></span>
+                            <span class="stars" aria-hidden="true"><?php echo appforge_stars( $avg_rating ); // phpcs:ignore ?></span>
+                            <span class="review-summary__count">
+                                <?php echo esc_html( sprintf( _n( '%s review', '%s reviews', $rating_count, 'appforge' ), number_format( $rating_count ) ) ); ?>
+                            </span>
+                        </div>
+                        <div class="review-summary__bars">
+                            <?php for ( $s = 5; $s >= 1; $s-- ) :
+                                $pct = $rating_count ? round( ( $breakdown[ $s ] / $rating_count ) * 100 ) : 0;
+                            ?>
+                            <div class="review-bar">
+                                <span class="review-bar__label"><?php echo esc_html( $s ); ?>&#9733;</span>
+                                <span class="review-bar__track"><span class="review-bar__fill" style="width:<?php echo esc_attr( $pct ); ?>%"></span></span>
+                                <span class="review-bar__pct"><?php echo esc_html( $breakdown[ $s ] ); ?></span>
+                            </div>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                    <?php else : ?>
+                    <p class="review-empty"><?php esc_html_e( 'No reviews yet. Be the first to review this app!', 'appforge' ); ?></p>
+                    <?php endif; ?>
+
+                    <?php if ( ! empty( $reviews ) ) : ?>
+                    <div class="review-list">
+                        <?php foreach ( $reviews as $review ) :
+                            $r = (int) get_comment_meta( $review->comment_ID, 'rating', true );
+                        ?>
+                        <div class="review-item">
+                            <div class="review-item__avatar"><?php echo get_avatar( $review, 40 ); // phpcs:ignore ?></div>
+                            <div class="review-item__body">
+                                <div class="review-item__hd">
+                                    <span class="review-item__author"><?php echo esc_html( $review->comment_author ); ?></span>
+                                    <?php if ( $r ) : ?><span class="stars" aria-hidden="true"><?php echo appforge_stars( $r ); // phpcs:ignore ?></span><?php endif; ?>
+                                    <span class="review-item__date"><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $review->comment_date ) ) ); ?></span>
+                                </div>
+                                <p class="review-item__text"><?php echo esc_html( $review->comment_content ); ?></p>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if ( comments_open( $post_id ) ) :
+                        comment_form( array(
+                            'title_reply'          => __( 'Write a Review', 'appforge' ),
+                            'title_reply_to'       => __( 'Write a Review', 'appforge' ),
+                            'label_submit'         => __( 'Submit Review', 'appforge' ),
+                            'class_form'           => 'comment-form review-form',
+                            'class_submit'         => 'btn-review-submit',
+                            'comment_notes_before' => '',
+                            'comment_notes_after'  => '',
+                            'fields'               => array(
+                                'author_email' => appforge_review_author_fields(),
+                            ),
+                            'comment_field'        => appforge_review_comment_field(),
+                        ), $post_id );
+                    endif; ?>
+
+                </div>
+            </div>
+
+            <!-- MORE FROM THIS DEVELOPER -->
+            <?php if ( $developer && $dev_apps && $dev_apps->have_posts() ) : ?>
+            <div class="app-section" id="more-from-developer">
+                <div class="app-section__hd">
+                    <h2 class="app-section__title"><?php echo esc_html( sprintf( __( 'More from %s', 'appforge' ), $developer ) ); ?></h2>
+                </div>
+                <div class="app-section__body">
+                    <div class="apps-grid">
+                        <?php while ( $dev_apps->have_posts() ) : $dev_apps->the_post();
+                            get_template_part( 'template-parts/app-card' );
+                        endwhile; wp_reset_postdata(); ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- SIMILAR APPS -->
+            <?php if ( $related_apps->have_posts() ) : ?>
+            <div class="app-section" id="similar-apps">
+                <div class="app-section__hd">
+                    <h2 class="app-section__title"><?php esc_html_e( 'Similar Apps', 'appforge' ); ?></h2>
+                </div>
+                <div class="app-section__body">
+                    <div class="apps-grid">
+                        <?php while ( $related_apps->have_posts() ) : $related_apps->the_post();
+                            get_template_part( 'template-parts/app-card' );
+                        endwhile; wp_reset_postdata(); ?>
                     </div>
                 </div>
             </div>
@@ -457,6 +662,37 @@
         </aside><!-- .app-detail-sidebar -->
 
     </div><!-- .app-detail-layout -->
+
+    <!-- REPORT MODAL -->
+    <div class="report-modal" id="appReportModal" hidden>
+        <div class="report-modal__backdrop" data-report-close></div>
+        <div class="report-modal__panel" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
+            <button type="button" class="report-modal__close" data-report-close aria-label="<?php esc_attr_e( 'Close', 'appforge' ); ?>">&times;</button>
+            <h3 id="reportModalTitle"><?php esc_html_e( 'Report this app', 'appforge' ); ?></h3>
+            <form id="appReportForm">
+                <input type="hidden" name="post_id" value="<?php echo esc_attr( $post_id ); ?>">
+                <div class="report-modal__field">
+                    <label for="reportReason"><?php esc_html_e( 'Reason', 'appforge' ); ?></label>
+                    <select id="reportReason" name="reason" required>
+                        <option value=""><?php esc_html_e( '— Select a reason —', 'appforge' ); ?></option>
+                        <?php foreach ( appforge_report_reasons() as $val => $label ) : ?>
+                        <option value="<?php echo esc_attr( $val ); ?>"><?php echo esc_html( $label ); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="report-modal__field">
+                    <label for="reportDetails"><?php esc_html_e( 'Details (optional)', 'appforge' ); ?></label>
+                    <textarea id="reportDetails" name="details" rows="3"></textarea>
+                </div>
+                <p class="report-modal__msg" aria-live="polite"></p>
+                <div class="report-modal__actions">
+                    <button type="button" class="btn-report-cancel" data-report-close><?php esc_html_e( 'Cancel', 'appforge' ); ?></button>
+                    <button type="submit" class="btn-report-submit"><?php esc_html_e( 'Submit Report', 'appforge' ); ?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </div><!-- .app-page-wrap -->
 
 <?php endwhile; ?>

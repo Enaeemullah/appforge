@@ -7,7 +7,9 @@ get_header(); ?>
 <div class="container">
     <h1 class="page-title">🔥 Popular Apps</h1>
     <p class="page-subtitle">Most viewed apps in the last 24 hours</p>
-    
+
+    <?php get_template_part( 'template-parts/app-filter-bar' ); ?>
+
     <div class="apps-grid">
         <?php
         $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
@@ -19,6 +21,7 @@ get_header(); ?>
             'orderby' => 'meta_value_num',
             'order' => 'DESC'
         );
+        $popular = appforge_app_filter_args( $popular );
         $query = new WP_Query($popular);
         
         if ($query->have_posts()) :

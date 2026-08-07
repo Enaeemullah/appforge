@@ -74,10 +74,11 @@ textarea {
 // Inline search (hero/sidebar)
 .search-input-group {
   display: flex;
+  align-items: center;
   gap: $spacer;
   background: $gray-100;
   border: 1.5px solid $gray-200;
-  border-radius: 0;
+  border-radius: $radius-full;
   padding: 6px 6px 6px 20px;
   transition: $transition-base;
 
@@ -90,14 +91,32 @@ textarea {
   input {
     flex: 1;
     border: none;
+    border-radius: 0;
     background: none;
     padding: 0;
     font-size: $font-size-md;
     color: $gray-900;
     outline: none;
     min-width: 0;
+    -webkit-appearance: none;
+    appearance: none;
+
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-results-button,
+    &::-webkit-search-results-decoration {
+      -webkit-appearance: none;
+    }
 
     &::placeholder { color: $gray-400; }
+
+    // The outer .search-input-group already shows its own focus ring
+    // via :focus-within — cancel the generic input:focus ring here so
+    // they don't stack into a "double border" look.
+    &:focus {
+      border-color: transparent;
+      box-shadow: none;
+    }
   }
 
   button {
@@ -105,15 +124,60 @@ textarea {
     border: none;
     padding: 0 $space-2;
     height: 36px;
-    border-radius: 0;
+    border-radius: $radius-full;
     color: $color-white;
     font-size: $font-size-sm;
     font-weight: $font-weight-semibold;
     cursor: pointer;
     transition: $transition-base;
     white-space: nowrap;
+    flex-shrink: 0;
 
     &:hover { background: $color-primary-dark; }
+  }
+}
+
+// App archive filter bar (category / OS / pricing / sort)
+.app-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: $spacer;
+  flex-wrap: wrap;
+  margin-bottom: $space-3;
+
+  &__select {
+    width: auto;
+    padding: 9px 32px 9px 14px;
+    border: 1.5px solid $gray-200;
+    border-radius: $radius-md;
+    background: $color-white;
+    font-size: $font-size-sm;
+    color: $gray-700;
+    cursor: pointer;
+
+    &:focus { border-color: $color-primary; }
+  }
+
+  &__apply {
+    @include btn-reset;
+    background: $color-primary;
+    color: $color-white;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    padding: 9px 20px;
+    border-radius: $radius-md;
+    cursor: pointer;
+    transition: $transition-base;
+
+    &:hover { background: $color-primary-dark; }
+  }
+
+  &__clear {
+    font-size: $font-size-sm;
+    color: $gray-400;
+    text-decoration: none;
+
+    &:hover { color: $color-danger; text-decoration: underline; }
   }
 }
 
@@ -146,5 +210,29 @@ textarea {
 
   .form-submit {
     margin-top: $space-1;
+  }
+
+  .comment-form-cookies-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0;
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: $color-primary;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    label {
+      margin-bottom: 0;
+      font-weight: $font-weight-regular;
+      color: $gray-600;
+      cursor: pointer;
+      line-height: $line-height-base;
+    }
   }
 }

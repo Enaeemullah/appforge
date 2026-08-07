@@ -51,6 +51,12 @@ button { cursor: pointer; }
 
 table { border-collapse: collapse; }
 
+hr {
+  border: none;
+  border-top: 1px solid $gray-200;
+  margin: $space-3 0;
+}
+
 // Screen-reader only
 .sr-only {
   position: absolute;

@@ -106,6 +106,25 @@
   }());
 
   // ============================================================
+  // CATEGORY BAR — scroll fade hints (left/right edges)
+  // ============================================================
+  (function () {
+    var bar   = document.querySelector('.cat-nav-bar');
+    var inner = document.querySelector('.cat-nav-inner');
+    if (!bar || !inner) return;
+
+    function update() {
+      var maxScroll = inner.scrollWidth - inner.clientWidth;
+      bar.classList.toggle('has-scroll-left', inner.scrollLeft > 1);
+      bar.classList.toggle('has-scroll-right', inner.scrollLeft < maxScroll - 1);
+    }
+
+    inner.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }());
+
+  // ============================================================
   // BACK TO TOP
   // ============================================================
   var backToTop = (function () {
@@ -186,6 +205,20 @@
   });
 
   // ============================================================
+  // TABLE OF CONTENTS — collapsible toggle
+  // ============================================================
+  document.querySelectorAll('.toc').forEach(function (toc) {
+    var toggle = toc.querySelector('.toc__toggle');
+    if (!toggle) return;
+
+    toggle.addEventListener('click', function () {
+      var expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      toc.classList.toggle('is-collapsed', expanded);
+    });
+  });
+
+  // ============================================================
   // CARD HOVER — Tilt effect on app cards (subtle)
   // ============================================================
   document.querySelectorAll('.app-card, .post-card').forEach(function (card) {
@@ -199,5 +232,66 @@
       this.style.transform = '';
     });
   });
+
+  // ============================================================
+  // REPORT MODAL (single-app.php)
+  // ============================================================
+  (function () {
+    var modal = document.getElementById('appReportModal');
+    if (!modal) return;
+
+    var form     = modal.querySelector('#appReportForm');
+    var msg      = modal.querySelector('.report-modal__msg');
+    var submit   = modal.querySelector('.btn-report-submit');
+    var openBtns = document.querySelectorAll('[data-report-open]');
+
+    function open() {
+      modal.removeAttribute('hidden');
+    }
+
+    function close() {
+      modal.setAttribute('hidden', '');
+      form.reset();
+      msg.textContent = '';
+      submit.disabled = false;
+    }
+
+    openBtns.forEach(function (btn) { btn.addEventListener('click', open); });
+
+    modal.querySelectorAll('[data-report-close]').forEach(function (el) {
+      el.addEventListener('click', close);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !modal.hasAttribute('hidden')) close();
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (typeof appforgeData === 'undefined') return;
+
+      submit.disabled = true;
+      msg.textContent = '';
+
+      var data = new FormData(form);
+      data.append('action', 'appforge_report_app');
+      data.append('nonce', appforgeData.nonce);
+
+      fetch(appforgeData.ajaxUrl, { method: 'POST', body: data, credentials: 'same-origin' })
+        .then(function (res) { return res.json(); })
+        .then(function (json) {
+          msg.textContent = (json.data && json.data.message) || '';
+          if (json.success) {
+            setTimeout(close, 1800);
+          } else {
+            submit.disabled = false;
+          }
+        })
+        .catch(function () {
+          msg.textContent = 'Something went wrong. Please try again.';
+          submit.disabled = false;
+        });
+    });
+  }());
 
 }());

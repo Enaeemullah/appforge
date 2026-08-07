@@ -17,10 +17,23 @@
         <div class="widget__header">
             <h3 class="widget__title"><?php esc_html_e( 'About', 'appforge' ); ?></h3>
         </div>
-        <div class="widget__body" style="text-align:center;padding:24px;">
-            <div style="font-size:48px;margin-bottom:16px;" aria-hidden="true">⚡</div>
-            <h4 style="font-size:20px;font-weight:800;margin-bottom:8px;">App<span style="color:var(--color-primary)">Forge</span></h4>
-            <p style="font-size:13px;color:var(--gray-600);line-height:1.8;"><?php esc_html_e( 'Your trusted source for safe, fast, and free APK downloads. All apps are verified and tested.', 'appforge' ); ?></p>
+        <div class="widget-about">
+            <?php if ( has_custom_logo() ) : ?>
+            <div class="widget-about__logo">
+                <?php the_custom_logo(); ?>
+            </div>
+            <?php else : ?>
+            <div class="widget-about__logo" aria-hidden="true">⚡</div>
+            <h4 class="widget-about__name">App<span><?php esc_html_e( 'Forge', 'appforge' ); ?></span></h4>
+            <?php endif; ?>
+            <p class="widget-about__desc">
+                <?php
+                echo esc_html( AppForge_Panel::get(
+                    'footer_about',
+                    'Your trusted source for safe, fast, and free APK downloads. All apps are verified and tested.'
+                ) );
+                ?>
+            </p>
         </div>
     </div>
 
@@ -108,7 +121,7 @@
         </div>
         <div class="widget-tag-cloud">
             <?php foreach ( $pop_tags as $t ) : ?>
-            <a href="<?php echo esc_url( get_tag_link( $t->term_id ) ); ?>" class="tag"><?php echo esc_html( $t->name ); ?></a>
+            <a href="<?php echo esc_url( get_tag_link( $t->term_id ) ); ?>" class="tag-pill"><?php echo esc_html( $t->name ); ?></a>
             <?php endforeach; ?>
         </div>
     </div>

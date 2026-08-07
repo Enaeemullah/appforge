@@ -89,11 +89,11 @@
   position: relative;
 }
 
-// Discover row — 6 tiles per row (12 apps = 2 rows)
+// Discover row — 6 tiles per row (18 apps = 3 rows)
 .discover-row {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: $space-2;
+  gap: 0;
 
   @media (max-width: 900px) { grid-template-columns: repeat(4, 1fr); }
   @include respond-to('md') { grid-template-columns: repeat(3, 1fr); }
@@ -119,13 +119,13 @@
   }
 
   &__icon {
-    width: 76px;
-    height: 76px;
+    width: 92px;
+    height: 92px;
     border-radius: $radius-lg;
     overflow: hidden;
     background: $gradient-card;
     @include flex-center;
-    font-size: 32px;
+    font-size: 38px;
     flex-shrink: 0;
     box-shadow: $shadow-sm;
 

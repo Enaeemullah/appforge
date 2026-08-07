@@ -41,7 +41,7 @@ get_header();
     <div style="padding: 16px 0;">
         <div class="tags-cloud">
             <?php foreach ( $related_tags as $t ) : ?>
-            <a href="<?php echo esc_url( get_tag_link( $t->term_id ) ); ?>" class="tag"><?php echo esc_html( $t->name ); ?></a>
+            <a href="<?php echo esc_url( get_tag_link( $t->term_id ) ); ?>" class="tag-pill"><?php echo esc_html( $t->name ); ?></a>
             <?php endforeach; ?>
         </div>
     </div>

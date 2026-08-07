@@ -292,38 +292,3 @@
     }
   }
 }
-
-// --- App Tile (icon grid) ---
-.app-tile {
-  @include flex-center;
-  flex-direction: column;
-  gap: $space-1;
-  text-decoration: none;
-  flex-shrink: 0;
-  width: 88px;
-
-  &:hover .app-tile__icon { transform: translateY(-4px); box-shadow: $shadow-lg; }
-
-  &__icon {
-    width: 72px;
-    height: 72px;
-    background: $color-white;
-    border-radius: $radius-xl;
-    @include flex-center;
-    box-shadow: $shadow-md;
-    font-size: 36px;
-    transition: $transition-slow;
-    overflow: hidden;
-
-    img { @include img-cover; border-radius: $radius-xl; }
-  }
-
-  &__name {
-    font-size: $font-size-xs;
-    font-weight: $font-weight-medium;
-    color: $gray-800;
-    text-align: center;
-    @include truncate(2);
-    line-height: 1.3;
-  }
-}

@@ -47,8 +47,12 @@
 
                 <div class="single-post-body">
                     <h1 class="single-post-title"><?php the_title(); ?></h1>
+                    <?php
+                    $toc = appforge_content_with_toc();
+                    appforge_render_toc( $toc['items'] );
+                    ?>
                     <div class="entry-content">
-                        <?php the_content(); ?>
+                        <?php echo $toc['content']; // phpcs:ignore ?>
                     </div>
 
                     <!-- Page links for multi-page posts -->
@@ -69,7 +73,7 @@
             <div style="margin-bottom:24px;">
                 <span class="text-muted" style="font-size:13px;margin-right:8px;"><?php esc_html_e( 'Tags:', 'appforge' ); ?></span>
                 <?php foreach ( $tags as $tag ) : ?>
-                <a href="<?php echo esc_url( get_tag_link( $tag->term_id ) ); ?>" class="tag"><?php echo esc_html( $tag->name ); ?></a>
+                <a href="<?php echo esc_url( get_tag_link( $tag->term_id ) ); ?>" class="tag-pill"><?php echo esc_html( $tag->name ); ?></a>
                 <?php endforeach; ?>
             </div>
             <?php endif; ?>

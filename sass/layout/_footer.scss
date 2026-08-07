@@ -38,16 +38,27 @@
 // ============================================================
 
 .footer-brand {
+  text-align: left;
+
   .footer-logo {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: $spacer;
     margin-bottom: $space-2;
     text-decoration: none;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
   }
 
   .footer-logo-icon {
-    font-size: 28px;
+    font-size: 26px;
+    line-height: 1;
     background: $gradient-primary;
     -webkit-background-clip: text;
     background-clip: text;
@@ -55,9 +66,10 @@
   }
 
   .footer-logo-text {
-    font-size: 20px;
+    font-size: 23px;
     font-weight: $font-weight-extrabold;
     color: $footer-heading;
+    letter-spacing: -0.01em;
 
     span {
       color: $color-primary;
@@ -68,7 +80,7 @@
     font-size: $font-size-sm;
     line-height: $line-height-loose;
     color: $footer-link;
-    max-width: 260px;
+    max-width: 320px;
     margin-bottom: $space-3;
   }
 
@@ -78,11 +90,11 @@
   }
 
   .social-btn {
-    width: 36px;
-    height: 36px;
-    background: $footer-social-bg;
-    border: 1px solid $footer-social-border;
-    border-radius: $radius-full;
+    width: 38px;
+    height: 38px;
+    background: transparent;
+    border: 1.5px solid $footer-social-border;
+    border-radius: $radius-md;
     @include flex-center;
     color: $footer-social-icon;
     text-decoration: none;

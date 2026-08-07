@@ -60,7 +60,11 @@
 }
 
 // Category / taxonomy tags
-.tag {
+// Named .tag-pill (not .tag) because WordPress adds a literal "tag"
+// class to <body> on tag archives — colliding with a plain ".tag"
+// selector applies this pill styling (inline-flex, 9999px radius,
+// nowrap) to the whole page body.
+.tag-pill {
   display: inline-flex;
   align-items: center;
   padding: 6px 14px;

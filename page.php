@@ -19,9 +19,13 @@
 
                 <div class="single-post-body">
                     <h1 class="single-post-title"><?php the_title(); ?></h1>
+                    <?php
+                    $toc = appforge_content_with_toc();
+                    appforge_render_toc( $toc['items'] );
+                    ?>
                     <div class="entry-content">
                         <?php
-                        the_content();
+                        echo $toc['content']; // phpcs:ignore
                         wp_link_pages( array(
                             'before' => '<nav class="page-links">',
                             'after'  => '</nav>',

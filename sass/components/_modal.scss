@@ -1,0 +1,105 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins'   as *;
+
+// ============================================================
+// MODAL (generic overlay dialog — e.g. the Report App form)
+// ============================================================
+.report-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  @include flex-center;
+
+  &[hidden] { display: none; }
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  &__panel {
+    position: relative;
+    background: $color-white;
+    border-radius: $radius-xl;
+    box-shadow: $shadow-lg;
+    padding: $space-4;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 $space-3;
+
+    h3 {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      color: $gray-900;
+      margin-bottom: $space-3;
+    }
+  }
+
+  &__close {
+    @include btn-reset;
+    position: absolute;
+    top: $space-2;
+    right: $space-2;
+    font-size: 22px;
+    line-height: 1;
+    color: $gray-400;
+    cursor: pointer;
+
+    &:hover { color: $gray-700; }
+  }
+
+  &__field {
+    margin-bottom: $space-2;
+
+    label {
+      display: block;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $gray-700;
+      margin-bottom: $spacer;
+    }
+  }
+
+  &__msg {
+    font-size: $font-size-sm;
+    color: $color-primary;
+    min-height: 18px;
+    margin: $spacer 0;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $spacer;
+    margin-top: $space-2;
+  }
+}
+
+.btn-report-submit {
+  @include btn-reset;
+  background: $color-primary;
+  color: $color-white;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  padding: 9px 20px;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover { background: $color-primary-dark; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.btn-report-cancel {
+  @include btn-reset;
+  background: $gray-100;
+  color: $gray-700;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  padding: 9px 20px;
+  border-radius: $radius-md;
+  cursor: pointer;
+
+  &:hover { background: $gray-200; }
+}

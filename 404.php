@@ -52,7 +52,7 @@ get_header();
             <p style="font-size:13px;color:var(--gray-500);margin-bottom:16px;"><?php esc_html_e( 'Popular categories:', 'appforge' ); ?></p>
             <div class="tags-cloud" style="justify-content:center;">
                 <?php foreach ( $cats as $cat ) : ?>
-                <a href="<?php echo esc_url( get_term_link( $cat ) ); ?>" class="tag"><?php echo esc_html( $cat->name ); ?></a>
+                <a href="<?php echo esc_url( get_term_link( $cat ) ); ?>" class="tag-pill"><?php echo esc_html( $cat->name ); ?></a>
                 <?php endforeach; ?>
             </div>
         </div>
