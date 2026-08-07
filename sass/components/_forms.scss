@@ -77,7 +77,7 @@ textarea {
   gap: $spacer;
   background: $gray-100;
   border: 1.5px solid $gray-200;
-  border-radius: $radius-full;
+  border-radius: 0;
   padding: 6px 6px 6px 20px;
   transition: $transition-base;
 
@@ -105,7 +105,7 @@ textarea {
     border: none;
     padding: 0 $space-2;
     height: 36px;
-    border-radius: $radius-full;
+    border-radius: 0;
     color: $color-white;
     font-size: $font-size-sm;
     font-weight: $font-weight-semibold;

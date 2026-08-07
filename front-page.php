@@ -78,7 +78,7 @@
         <?php
         $discover_apps = new WP_Query( array(
             'post_type'      => 'app',
-            'posts_per_page' => 16,
+            'posts_per_page' => 12,
             'orderby'        => 'rand',
         ) );
         if ( $discover_apps->have_posts() ) : ?>
@@ -89,7 +89,9 @@
                    class="apk-section-header__link"><?php esc_html_e( 'View All', 'appforge' ); ?></a>
             </div>
             <div class="discover-row" role="list" aria-label="<?php esc_attr_e( 'App collection', 'appforge' ); ?>">
-                <?php while ( $discover_apps->have_posts() ) : $discover_apps->the_post(); ?>
+                <?php while ( $discover_apps->have_posts() ) : $discover_apps->the_post();
+                    $discover_rating = appforge_get_rating();
+                ?>
                 <a href="<?php the_permalink(); ?>" class="app-tile" role="listitem"
                    aria-label="<?php the_title_attribute(); ?>">
                     <div class="app-tile__icon" aria-hidden="true">
@@ -100,6 +102,11 @@
                         <?php endif; ?>
                     </div>
                     <span class="app-tile__name"><?php echo esc_html( wp_trim_words( get_the_title(), 2 ) ); ?></span>
+                    <?php if ( $discover_rating ) : ?>
+                    <span class="app-tile__rating" aria-label="<?php echo esc_attr( sprintf( __( 'Rating: %s', 'appforge' ), $discover_rating ) ); ?>">
+                        <span class="app-tile__star" aria-hidden="true">★</span><?php echo esc_html( $discover_rating ); ?>
+                    </span>
+                    <?php endif; ?>
                 </a>
                 <?php endwhile; wp_reset_postdata(); ?>
             </div>
@@ -155,7 +162,7 @@
                     <?php endif; ?>
                     <?php if ( $rating ) : ?>
                     <span class="ranked-card__stars" aria-label="<?php echo esc_attr( sprintf( __( 'Rating: %s', 'appforge' ), $rating ) ); ?>">
-                        <?php echo str_repeat( '★', min( 5, round( (float) $rating ) ) ); ?>
+                        <span class="ranked-card__star-icon" aria-hidden="true">★</span><?php echo esc_html( $rating ); ?>
                     </span>
                     <?php endif; ?>
                 </a>

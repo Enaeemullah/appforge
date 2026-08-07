@@ -64,90 +64,44 @@
   }());
 
   // ============================================================
-  // MOBILE NAVIGATION
+  // INLINE HEADER SEARCH — small bar, expands to center on focus
   // ============================================================
-  var mobileNav = (function () {
-    var btn    = document.getElementById('mobileMenuBtn');
-    var nav    = document.getElementById('mobileNav');
+  var navSearch = (function () {
+    var bar    = document.getElementById('navSearchBar');
+    var nav    = document.getElementById('site-navigation');
+    var input  = bar ? bar.querySelector('input[type="search"]') : null;
     var isOpen = false;
 
-    if (!btn || !nav) return;
+    if (!bar || !input) return;
 
     function open() {
+      if (isOpen) return;
       isOpen = true;
-      btn.classList.add('active');
-      btn.setAttribute('aria-expanded', 'true');
-      nav.removeAttribute('hidden');
-      document.body.style.overflow = 'hidden';
+      bar.classList.add('is-expanded');
+      if (nav) nav.setAttribute('hidden', '');
     }
 
     function close() {
+      if (!isOpen) return;
       isOpen = false;
-      btn.classList.remove('active');
-      btn.setAttribute('aria-expanded', 'false');
-      nav.setAttribute('hidden', '');
-      document.body.style.overflow = '';
+      bar.classList.remove('is-expanded');
+      if (nav) nav.removeAttribute('hidden');
     }
 
-    btn.addEventListener('click', function () {
-      isOpen ? close() : open();
-    });
+    input.addEventListener('focus', open);
 
-    // Close on outside click
-    document.addEventListener('click', function (e) {
-      if (isOpen && !nav.contains(e.target) && !btn.contains(e.target)) {
-        close();
-      }
-    });
-
-    // Close on Escape
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && isOpen) { close(); btn.focus(); }
-    });
-  }());
-
-  // ============================================================
-  // SEARCH OVERLAY
-  // ============================================================
-  var searchOverlay = (function () {
-    var toggleBtn = document.getElementById('searchToggle');
-    var overlay   = document.getElementById('searchOverlay');
-    var closeBtn  = document.getElementById('searchClose');
-    var input     = overlay ? overlay.querySelector('input[type="search"]') : null;
-    var isOpen    = false;
-
-    if (!toggleBtn || !overlay) return;
-
-    function open() {
-      isOpen = true;
-      overlay.removeAttribute('hidden');
-      overlay.classList.add('active');
-      toggleBtn.setAttribute('aria-expanded', 'true');
-      document.body.style.overflow = 'hidden';
-      setTimeout(function () { if (input) input.focus(); }, 100);
-    }
-
-    function close() {
-      isOpen = false;
-      overlay.classList.remove('active');
-      toggleBtn.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
+    // Collapse once focus leaves the bar entirely (covers outside clicks
+    // and tabbing away) — checked a tick later so the new activeElement
+    // has settled, since opening synchronously shifts layout mid-click.
+    bar.addEventListener('focusout', function () {
       setTimeout(function () {
-        overlay.setAttribute('hidden', '');
-        toggleBtn.focus();
-      }, 300);
-    }
-
-    toggleBtn.addEventListener('click', open);
-    if (closeBtn) closeBtn.addEventListener('click', close);
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && isOpen) close();
+        if (!bar.contains(document.activeElement)) close();
+      }, 0);
     });
 
-    // Close on backdrop click
-    overlay.addEventListener('click', function (e) {
-      if (e.target === overlay) close();
+    // Collapse on Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isOpen) { close(); input.blur(); }
     });
   }());
 

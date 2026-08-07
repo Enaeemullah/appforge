@@ -22,11 +22,21 @@
 .apk-main,
 .apk-sidebar { min-width: 0; }
 
-// Section spacing
+// Homepage sections — each rendered as its own white card
 .discover-section,
 .ranked-section,
 .hot-section,
-.latest-section { margin-bottom: $space-4; }
+.latest-section,
+.blog-section {
+  background: $color-white;
+  border: 1px solid $gray-200;
+  border-radius: 0;
+  box-shadow: $shadow-sm;
+  padding: $space-3;
+  margin-bottom: $space-2;
+
+  @media (max-width: #{$bp-md}) { padding: $space-2; }
+}
 
 // Section header row (title + "View All" link)
 .apk-section-header {
@@ -79,14 +89,15 @@
   position: relative;
 }
 
-// Discover row — icon tile grid
+// Discover row — 6 tiles per row (12 apps = 2 rows)
 .discover-row {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: $space-1;
+  grid-template-columns: repeat(6, 1fr);
+  gap: $space-2;
 
-  @media (max-width: 900px) { grid-template-columns: repeat(6, 1fr); }
-  @include respond-to('md') { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 900px) { grid-template-columns: repeat(4, 1fr); }
+  @include respond-to('md') { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 480px) { grid-template-columns: repeat(2, 1fr); }
 }
 
 .app-tile {
@@ -94,6 +105,7 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
+  min-width: 0;
   text-decoration: none;
   color: $gray-800;
   padding: $space-2 $spacer;
@@ -107,13 +119,13 @@
   }
 
   &__icon {
-    width: 60px;
-    height: 60px;
+    width: 76px;
+    height: 76px;
     border-radius: $radius-lg;
     overflow: hidden;
     background: $gradient-card;
     @include flex-center;
-    font-size: 26px;
+    font-size: 32px;
     flex-shrink: 0;
     box-shadow: $shadow-sm;
 
@@ -121,12 +133,27 @@
   }
 
   &__name {
-    font-size: $font-size-xs;
+    font-size: $font-size-sm;
     font-weight: $font-weight-semibold;
     text-align: center;
     line-height: 1.3;
     color: inherit;
+    min-width: 0;
     @include truncate(2);
+  }
+
+  &__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: $gray-600;
+  }
+
+  &__star {
+    color: #f59e0b;
+    font-size: 11px;
   }
 }
 
@@ -144,28 +171,35 @@
   display: flex;
   align-items: center;
   gap: $space-2;
+  min-width: 0;
   text-decoration: none;
   color: $gray-900;
   background: $color-white;
   border: 1px solid $gray-200;
-  border-radius: $radius-lg;
+  border-radius: $radius-md;
   padding: $space-2;
   transition: $transition-base;
 
   &:hover {
     border-color: rgba($color-primary, 0.4);
     box-shadow: $shadow-sm;
-    transform: translateY(-2px);
   }
 
   &__badge {
-    font-size: $font-size-sm;
+    font-size: 11px;
     font-weight: $font-weight-extrabold;
-    color: $color-primary;
+    color: $gray-500;
+    background: $gray-100;
     width: 20px;
+    height: 20px;
+    border-radius: $radius-full;
     flex-shrink: 0;
-    text-align: center;
+    @include flex-center;
   }
+
+  &:nth-child(1) &__badge { background: #ffd54f; color: #7a5b00; }
+  &:nth-child(2) &__badge { background: #cfd8dc; color: #37474f; }
+  &:nth-child(3) &__badge { background: #ffab91; color: #7a2e00; }
 
   &__icon {
     width: 44px;
@@ -186,6 +220,7 @@
     color: $gray-900;
     @include truncate(1);
     flex: 1;
+    min-width: 0;
   }
 
   &__cat {
@@ -194,10 +229,19 @@
   }
 
   &__stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
     font-size: $font-size-xs;
-    color: #f59e0b;
+    font-weight: $font-weight-semibold;
+    color: $gray-700;
     flex-shrink: 0;
     margin-left: auto;
+  }
+
+  &__star-icon {
+    color: #f59e0b;
+    font-size: 12px;
   }
 }
 
@@ -206,6 +250,7 @@
   display: flex;
   align-items: center;
   gap: $space-2;
+  min-width: 0;
   text-decoration: none;
   color: $gray-900;
   background: $color-white;
@@ -261,6 +306,7 @@
     font-size: $font-size-sm;
     font-weight: $font-weight-semibold;
     color: $gray-900;
+    min-width: 0;
     @include truncate(1);
   }
 
@@ -307,6 +353,7 @@
     font-size: $font-size-sm;
     font-weight: $font-weight-semibold;
     color: $gray-900;
+    min-width: 0;
     @include truncate(1);
   }
 
@@ -331,7 +378,7 @@
 
 .apk-widget {
   background: $color-white;
-  border-radius: $radius-xl;
+  border-radius: 0;
   border: 1px solid $gray-200;
   box-shadow: $shadow-sm;
   overflow: hidden;
@@ -381,7 +428,7 @@
   color: $gray-700;
   background: $gray-100;
   border: 1px solid $gray-200;
-  border-radius: $radius-full;
+  border-radius: 0;
   padding: 4px 10px;
   text-decoration: none;
   transition: $transition-base;
@@ -396,7 +443,7 @@
 // Promo widget
 .apk-promo-widget {
   background: $color-white;
-  border-radius: $radius-xl;
+  border-radius: 0;
   border: 1px solid $gray-200;
   box-shadow: $shadow-sm;
   overflow: hidden;
@@ -436,6 +483,8 @@
     align-items: center;
     justify-content: space-between;
     gap: $space-2;
+
+    .btn { border-radius: 0; }
   }
 }
 
@@ -508,8 +557,6 @@
 }
 
 // ---- BLOG POSTS SECTION ----
-
-.blog-section { margin-bottom: $space-4; }
 
 .blog-grid {
   display: grid;

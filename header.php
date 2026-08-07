@@ -35,27 +35,20 @@
             ) ); ?>
         </nav>
 
-        <!-- Nav Actions -->
-        <div class="nav-actions">
-            <!-- Search Toggle -->
-            <button class="nav-search-btn" id="searchToggle"
-                    aria-label="<?php esc_attr_e( 'Open search', 'appforge' ); ?>"
-                    aria-expanded="false" aria-controls="searchOverlay">
+        <!-- Inline Header Search (small by default, expands to center on focus) -->
+        <form class="nav-search-bar" id="navSearchBar" role="search" method="get"
+              action="<?php echo esc_url( home_url( '/' ) ); ?>">
+            <label for="nav-search-input" class="sr-only"><?php esc_html_e( 'Search', 'appforge' ); ?></label>
+            <button type="submit" aria-label="<?php esc_attr_e( 'Submit search', 'appforge' ); ?>">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                     <circle cx="11" cy="11" r="7"/>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                 </svg>
             </button>
-
-            <!-- Mobile Menu Toggle -->
-            <button class="mobile-menu-btn" id="mobileMenuBtn"
-                    aria-label="<?php esc_attr_e( 'Toggle navigation menu', 'appforge' ); ?>"
-                    aria-expanded="false" aria-controls="mobileNav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
+            <input type="search" id="nav-search-input" name="s"
+                   placeholder="<?php esc_attr_e( 'Search apps…', 'appforge' ); ?>"
+                   autocomplete="off" value="<?php echo esc_attr( get_search_query() ); ?>">
+        </form>
 
     </div><!-- .nav-container -->
 </header><!-- .top-nav -->
@@ -85,44 +78,5 @@ if ( $nav_cats && ! is_wp_error( $nav_cats ) ) : ?>
     </div>
 </nav>
 <?php endif; ?>
-
-<!-- ===== MOBILE NAV DRAWER ===== -->
-<div class="mobile-nav" id="mobileNav" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Mobile navigation', 'appforge' ); ?>" hidden>
-    <div class="mobile-nav__inner">
-        <?php wp_nav_menu( array(
-            'theme_location' => 'primary',
-            'container'      => false,
-            'menu_class'     => 'mobile-menu',
-            'fallback_cb'    => false,
-        ) ); ?>
-    </div>
-</div>
-
-<!-- ===== SEARCH OVERLAY ===== -->
-<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true"
-     aria-label="<?php esc_attr_e( 'Search', 'appforge' ); ?>" hidden>
-    <div class="search-overlay__inner">
-        <p class="search-overlay__label"><?php esc_html_e( 'Search for apps, articles or topics…', 'appforge' ); ?></p>
-        <form class="search-overlay__form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-            <label for="overlay-search" class="sr-only"><?php esc_html_e( 'Search', 'appforge' ); ?></label>
-            <input type="search" id="overlay-search" name="s"
-                   placeholder="<?php esc_attr_e( 'Type to search…', 'appforge' ); ?>"
-                   autocomplete="off" value="<?php echo esc_attr( get_search_query() ); ?>">
-            <button type="submit" aria-label="<?php esc_attr_e( 'Submit search', 'appforge' ); ?>">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                    <circle cx="11" cy="11" r="7"/>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </svg>
-            </button>
-        </form>
-    </div>
-    <button class="search-close-btn" id="searchClose"
-            aria-label="<?php esc_attr_e( 'Close search', 'appforge' ); ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" focusable="false">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-    </button>
-</div>
 
 <main id="main-content" tabindex="-1">
