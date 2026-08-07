@@ -197,7 +197,7 @@
                             <span class="app-meta-key"><?php esc_html_e( 'Get it on', 'appforge' ); ?></span>
                             <span class="app-meta-val">
                                 <a href="<?php echo esc_url( $gplay_url ); ?>" class="btn-gplay" rel="nofollow noopener" target="_blank">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#34A853" aria-hidden="true"><path d="M3.18 23.76c.27.14.58.17.88.08L13.94 12 6.06 4.12 3.18 3.24A1 1 0 0 0 2 4.12v15.76a1 1 0 0 0 1.18.88zm17.64-9.76-3.17-1.83-3.08 3.08 3.08 3.08 3.18-1.84a1 1 0 0 0 0-1.49zm-14.89 8.5 9.04-9.04-3.08-3.08z"/></svg>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#fbfcfb" aria-hidden="true"><path d="M3.18 23.76c.27.14.58.17.88.08L13.94 12 6.06 4.12 3.18 3.24A1 1 0 0 0 2 4.12v15.76a1 1 0 0 0 1.18.88zm17.64-9.76-3.17-1.83-3.08 3.08 3.08 3.08 3.18-1.84a1 1 0 0 0 0-1.49zm-14.89 8.5 9.04-9.04-3.08-3.08z"/></svg>
                                     Google Play
                                 </a>
                             </span>
