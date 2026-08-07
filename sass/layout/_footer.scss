@@ -54,20 +54,24 @@
       gap: 8px;
       text-decoration: none;
     }
+
+    img {
+      display: block;
+      width: auto;
+      max-height: 48px;
+    }
   }
 
   .footer-logo-icon {
-    font-size: 26px;
-    line-height: 1;
-    background: $gradient-primary;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    display: flex;
+    line-height: 0;
+
+    svg { display: block; width: 44px; height: 44px; }
   }
 
   .footer-logo-text {
-    font-size: 23px;
-    font-weight: $font-weight-extrabold;
+    font-size: 30px;
+    font-weight: $font-weight-bold;
     color: $footer-heading;
     letter-spacing: -0.01em;
 
@@ -77,34 +81,29 @@
   }
 
   p {
-    font-size: $font-size-sm;
+    font-size: $font-size-base;
     line-height: $line-height-loose;
     color: $footer-link;
-    max-width: 320px;
+    max-width: 340px;
     margin-bottom: $space-3;
   }
 
   .footer-social {
     display: flex;
-    gap: $spacer;
+    align-items: center;
+    gap: $space-3;
   }
 
   .social-btn {
-    width: 38px;
-    height: 38px;
-    background: transparent;
-    border: 1.5px solid $footer-social-border;
-    border-radius: $radius-md;
     @include flex-center;
     color: $footer-social-icon;
     text-decoration: none;
-    font-size: 16px;
     transition: $transition-base;
 
+    svg { width: 19px; height: 19px; }
+
     &:hover {
-      background: $color-primary;
-      border-color: $color-primary;
-      color: $color-white;
+      color: $color-primary;
       transform: translateY(-2px);
     }
   }
@@ -116,12 +115,10 @@
 
 .footer-col {
   h5 {
-    font-size: $font-size-sm;
-    font-weight: $font-weight-bold;
+    font-size: 20px;
+    font-weight: $font-weight-semibold;
     color: $footer-heading;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: $space-2;
+    margin-bottom: $space-3;
   }
 
   nav ul,
@@ -129,7 +126,7 @@
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: $space-3;
     padding: 0;
     margin: 0;
   }
@@ -138,7 +135,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: $font-size-sm;
+    font-size: $font-size-base;
     color: $footer-link;
     text-decoration: none;
     transition: $transition-base;

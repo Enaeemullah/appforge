@@ -23,6 +23,25 @@
   > * {
     min-width: 0;
   }
+
+  // sidebar.php renders nothing when the "Sidebar" panel option is
+  // disabled — collapse to a single centered column automatically
+  // rather than requiring every template to pass a modifier class.
+  &:not(:has(.sidebar)) {
+    grid-template-columns: 1fr;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  // "Sidebar position: left" — sidebar.php adds .sidebar--left; flip the
+  // track order and widths without touching template markup/DOM order.
+  &:has(.sidebar--left) {
+    grid-template-columns: $sidebar-width 1fr;
+
+    @include respond-to('lg') { grid-template-columns: 1fr; }
+
+    .sidebar--left { order: -1; }
+  }
 }
 
 .page-layout--no-sidebar {

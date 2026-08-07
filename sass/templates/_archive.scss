@@ -70,56 +70,233 @@
   }
 }
 
-// Category hero (carousel + info strip) — app_category taxonomy pages
-.category-hero-carousel {
-  border-radius: $radius-2xl;
-  overflow: hidden;
-  box-shadow: $shadow-lg;
+// Category hero carousel — 3-up row of featured apps, app_category taxonomy pages
+.cat-hero-carousel {
+  position: relative;
   margin: $space-4 0;
+}
 
-  .carousel-img,
-  .carousel-placeholder { height: 360px; }
+.cat-hero-track {
+  display: flex;
+  gap: $space-3;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
 
-  @include respond-to('md') {
-    .carousel-img,
-    .carousel-placeholder { height: 240px; }
+.cat-hero-card {
+  position: relative;
+  flex: 0 0 calc((100% - #{$space-3} * 2) / 3);
+  scroll-snap-align: start;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  box-shadow: $shadow-md;
+
+  @include respond-to('md') { flex-basis: calc((100% - #{$space-3}) / 2); }
+  @media (max-width: 480px) { flex-basis: 100%; }
+
+  &__img,
+  &__placeholder { height: 220px; }
+
+  &__img { width: 100%; object-fit: cover; display: block; }
+
+  &__placeholder {
+    width: 100%;
+    background: $gradient-hero;
+    @include flex-center;
+    font-size: 56px;
+    color: rgba($color-white, 0.4);
+  }
+
+  &__overlay {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: $space-4 $space-3 $space-3;
+    background: linear-gradient(transparent, rgba($color-dark, 0.85));
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: $space-2;
+  }
+
+  &__name {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $color-white;
+    flex: 1;
+    min-width: 0;
+    @include truncate(2);
+  }
+
+  &__link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .btn-carousel-dl { position: relative; z-index: 2; }
+}
+
+.cat-hero-carousel__btn {
+  @include btn-reset;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  @include glass(5px, rgba(255,255,255,0.35));
+  border: 1px solid rgba(255,255,255,0.4);
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-full;
+  @include flex-center;
+  color: $color-white;
+  font-size: 18px;
+  box-shadow: $shadow-md;
+  transition: $transition-base;
+
+  &:hover { background: $color-primary; border-color: $color-primary; }
+  &--prev { left: $space-2; }
+  &--next { right: $space-2; }
+}
+
+// Carousel overlay variant with a Download button (category hero)
+.carousel-overlay--split {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $space-2;
+
+  h2 { margin-bottom: 0; flex: 1; min-width: 0; }
+}
+
+.btn-carousel-dl {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  background: $color-primary;
+  color: $color-white;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  padding: 9px 20px;
+  border-radius: $radius-md;
+  text-decoration: none;
+  transition: $transition-base;
+
+  &:hover { background: $color-primary-dark; color: $color-white; }
+}
+
+// Hot / Latest-Update-Downloads-Rating category sections
+.cat-section {
+  margin-bottom: $space-5;
+}
+
+.cat-section__hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $space-2;
+  margin-bottom: $space-3;
+}
+
+.cat-section__title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $gray-900;
+}
+
+.cat-tabs {
+  display: flex;
+  gap: $space-3;
+}
+
+.cat-tab {
+  @include btn-reset;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $gray-500;
+  cursor: pointer;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+  transition: $transition-base;
+
+  &:hover { color: $gray-800; }
+
+  &.active {
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+    border-bottom-color: $color-primary;
   }
 }
 
-.category-hero-info {
-  text-align: center;
-  padding-bottom: $space-4;
-  border-bottom: 1px solid $gray-200;
-  margin-bottom: $space-4;
+.cat-app-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-2 $space-4;
 
-  &__title {
-    font-size: $font-size-4xl;
-    font-weight: $font-weight-extrabold;
-    color: $gray-900;
-    margin-bottom: $spacer;
+  @include respond-to('md') { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
 
-    @include respond-to('md') { font-size: $font-size-3xl; }
+  &[hidden] { display: none; }
+}
+
+.cat-app-row {
+  display: flex;
+  align-items: center;
+  gap: $spacer * 2;
+  padding: $spacer * 2 0;
+  text-decoration: none;
+  min-width: 0; // grid item — must shrink to its column, not its content
+
+  &__icon {
+    width: 52px;
+    height: 52px;
+    border-radius: $radius-md;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: $gradient-card;
+    @include flex-center;
+    font-size: 22px;
+
+    img { @include img-cover; border-radius: $radius-md; }
   }
 
-  &__desc {
+  &__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
     font-size: $font-size-base;
-    color: $gray-600;
-    line-height: $line-height-loose;
-    max-width: 640px;
-    margin: 0 auto $spacer;
+    font-weight: $font-weight-semibold;
+    color: $gray-900;
+    @include truncate(1);
+    transition: color 0.2s;
   }
 
-  &__count {
+  &__dev {
+    font-size: $font-size-xs;
+    color: $gray-500;
+    @include truncate(1);
+  }
+
+  &__rating {
+    flex-shrink: 0;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     font-size: $font-size-sm;
     font-weight: $font-weight-semibold;
-    color: $color-primary;
-    background: rgba($color-primary, 0.08);
-    padding: 4px 14px;
-    border-radius: $radius-full;
+    color: $color-warning;
   }
+
+  &:hover &__name { color: $color-primary; }
 }
 
 // Author archive specific

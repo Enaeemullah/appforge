@@ -2,9 +2,15 @@
 /**
  * Sidebar Template
  */
+
+if ( AppForge_Panel::get( 'sidebar_active', '1' ) !== '1' ) {
+    return;
+}
+
+$sidebar_pos_class = AppForge_Panel::get( 'sidebar_position', 'right' ) === 'left' ? ' sidebar--left' : '';
 ?>
 
-<aside class="sidebar" id="secondary" aria-label="<?php esc_attr_e( 'Sidebar', 'appforge' ); ?>">
+<aside class="sidebar<?php echo esc_attr( $sidebar_pos_class ); ?>" id="secondary" aria-label="<?php esc_attr_e( 'Sidebar', 'appforge' ); ?>">
 
     <?php if ( is_active_sidebar( 'sidebar-main' ) ) :
         dynamic_sidebar( 'sidebar-main' );

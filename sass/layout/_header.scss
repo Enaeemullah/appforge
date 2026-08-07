@@ -21,9 +21,9 @@
   padding: 0 $container-padding;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 100%;
-  gap: $space-3;
+  gap: $space-4;
 }
 
 // Logo
@@ -33,11 +33,11 @@
   img {
     display: block;
     width: auto;
-    max-height: 32px;
+    max-height: 44px;
   }
 
   @media (max-width: #{$bp-md}) {
-    img { max-height: 26px; }
+    img { max-height: 34px; }
   }
 }
 
@@ -58,18 +58,18 @@
 }
 
 .logo-text {
-  font-size: 22px;
+  font-size: 28px;
   font-weight: $font-weight-extrabold;
   color: $gray-900;
 
   span { color: $color-primary; }
 }
 
-// Desktop nav menu (WordPress renders as <ul>)
+// Desktop nav menu (WordPress renders as <ul>) — sits directly after the
+// logo, left-aligned; the search bar's margin-left:auto pushes it right.
 .main-nav {
-  flex: 1;
   display: flex;
-  justify-content: center;
+  align-items: center;
 
   @include respond-to('lg') { display: none; }
 
@@ -79,48 +79,45 @@
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: $space-1;
+  gap: $space-4;
   list-style: none;
 
   > li > a {
     display: inline-flex;
     align-items: center;
-    padding: 8px 14px;
+    gap: 4px;
+    padding: 4px 0;
     text-decoration: none;
-    color: $gray-700;
+    color: $gray-800;
     font-weight: $font-weight-medium;
     font-size: $font-size-md;
-    border-radius: $radius-md;
     transition: $transition-base;
 
-    &:hover {
-      color: $color-primary;
-      background: rgba($color-primary, 0.06);
-    }
+    &:hover { color: $color-primary; }
   }
 
   > .current-menu-item > a,
   > .current_page_item > a {
     color: $color-primary;
-    background: rgba($color-primary, 0.08);
     font-weight: $font-weight-semibold;
   }
 }
 
-// Inline header search — small pill pinned right by default,
-// expands and centers itself when the input is focused.
+// Inline header search — pinned to the far right, always-on pill.
 .nav-search-bar {
   display: flex;
   align-items: center;
-  width: 210px;
-  max-width: 210px;
+  width: 320px;
+  max-width: 320px;
   min-width: 0;
   margin-left: auto;
-  border: 1.5px solid $gray-300;
+  border: 1px solid $gray-200;
   border-radius: $radius-sm;
-  background: $color-white;
+  background: $gray-50;
   flex-shrink: 1;
   transition: max-width 0.25s ease, margin 0.25s ease, border-color 0.2s;
+
+  @include respond-to('lg') { width: 240px; max-width: 240px; }
 
   &:focus-within,
   &.is-expanded {

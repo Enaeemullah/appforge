@@ -304,6 +304,13 @@ function appforge_sanitize_scripts( $value ) {
 // OUTPUT DYNAMIC CSS (primary/secondary color overrides)
 // ============================================================
 function appforge_customizer_css() {
+    // The AppForge admin panel (Appearance → AppForge → Colors) has its own
+    // primary-color override on the same selectors — if it's been changed
+    // from the shared default, let it win instead of racing this one.
+    if ( class_exists( 'AppForge_Panel' ) && AppForge_Panel::get( 'color_primary', '#00C853' ) !== '#00C853' ) {
+        return;
+    }
+
     $primary   = get_theme_mod( 'appforge_color_primary', '#00C853' );
     $secondary = get_theme_mod( 'appforge_color_secondary', '#6200ea' );
 

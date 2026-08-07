@@ -64,6 +64,30 @@
   }());
 
   // ============================================================
+  // CATEGORY HERO CAROUSEL — 3-up scroll row (category archive pages)
+  // ============================================================
+  (function () {
+    var section = document.getElementById('catHeroCarousel');
+    if (!section) return;
+
+    var track   = section.querySelector('[data-cat-hero-track]');
+    var prevBtn = section.querySelector('[data-cat-hero-prev]');
+    var nextBtn = section.querySelector('[data-cat-hero-next]');
+    if (!track) return;
+
+    function scrollByCard(dir) {
+      var card = track.querySelector('.cat-hero-card');
+      if (!card) return;
+      var trackStyle = window.getComputedStyle(track);
+      var gap = parseFloat(trackStyle.columnGap || trackStyle.gap) || 0;
+      track.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior: 'smooth' });
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { scrollByCard(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { scrollByCard(1); });
+  }());
+
+  // ============================================================
   // INLINE HEADER SEARCH — small bar, expands to center on focus
   // ============================================================
   var navSearch = (function () {
@@ -215,6 +239,33 @@
       var expanded = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
       toc.classList.toggle('is-collapsed', expanded);
+    });
+  });
+
+  // ============================================================
+  // CATEGORY SECTION TABS — Latest Update / Downloads / Rating
+  // ============================================================
+  document.querySelectorAll('.cat-tabs').forEach(function (tabs) {
+    var section = tabs.closest('.cat-section');
+    if (!section) return;
+    var buttons = tabs.querySelectorAll('.cat-tab');
+    var panels  = section.querySelectorAll('.cat-tab-panel');
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = btn.dataset.tab;
+
+        buttons.forEach(function (b) {
+          b.classList.toggle('active', b === btn);
+          b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+        });
+        panels.forEach(function (panel) {
+          var match = panel.dataset.panel === target;
+          panel.classList.toggle('active', match);
+          if (match) panel.removeAttribute('hidden');
+          else panel.setAttribute('hidden', '');
+        });
+      });
     });
   });
 

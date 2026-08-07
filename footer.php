@@ -14,7 +14,18 @@
             the_custom_logo();
         else : ?>
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-                <span class="footer-logo-icon" aria-hidden="true">⚡</span>
+                <span class="footer-logo-icon" aria-hidden="true">
+                    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="34" height="34" rx="9" fill="url(#footerLogoGradient)"/>
+                        <path d="M19.5 7L11 18.5h5.2l-1 8.5L23 15.5h-5.2l1.7-8.5z" fill="#fff"/>
+                        <defs>
+                            <linearGradient id="footerLogoGradient" x1="0" y1="0" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#00C853"/>
+                                <stop offset="1" stop-color="#6200ea"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </span>
                 <span class="footer-logo-text">App<span><?php esc_html_e( 'Forge', 'appforge' ); ?></span></span>
             </a>
         <?php endif; ?>

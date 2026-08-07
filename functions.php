@@ -321,6 +321,10 @@ function appforge_breadcrumbs() {
             }
         }
         $items[] = '<span class="breadcrumb__current" aria-current="page">' . esc_html( get_the_title() ) . '</span>';
+    } elseif ( is_tax( 'app_category' ) ) {
+        $arc = get_post_type_archive_link( 'app' );
+        if ( $arc ) $items[] = '<a href="' . esc_url( $arc ) . '" class="breadcrumb__link">' . esc_html__( 'Apps', 'appforge' ) . '</a>';
+        $items[] = '<span class="breadcrumb__current" aria-current="page">' . esc_html( single_term_title( '', false ) ) . '</span>';
     } elseif ( is_category() ) {
         $items[] = '<span class="breadcrumb__current" aria-current="page">' . esc_html( single_cat_title( '', false ) ) . '</span>';
     } elseif ( is_tag() ) {

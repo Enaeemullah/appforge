@@ -83,6 +83,14 @@ class AppForge_Panel {
 
         // Download page detection
         add_filter( 'template_include', array( $this, 'download_template' ) );
+
+        // "Disable comments" option — gate every comments_open() check theme-wide
+        add_filter( 'comments_open', array( $this, 'filter_comments_open' ), 20 );
+    }
+
+    public function filter_comments_open( $open ) {
+        if ( self::get( 'comments_type' ) === 'disabled' ) return false;
+        return $open;
     }
 
     // ----------------------------------------------------------------
