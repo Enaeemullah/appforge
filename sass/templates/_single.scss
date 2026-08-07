@@ -24,6 +24,15 @@
   @include respond-to('lg') { grid-template-columns: 1fr; }
 }
 
+// Grid items default to min-width: auto, which lets their content's
+// min-content size force the track wider than the viewport on mobile
+// (a classic CSS Grid overflow trap). Pin both to 0 so they actually
+// shrink to fit.
+.app-detail-main,
+.app-detail-sidebar {
+  min-width: 0;
+}
+
 // Header card
 .app-header-card {
   background: $color-white;

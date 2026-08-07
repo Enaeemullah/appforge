@@ -15,6 +15,14 @@
   @include respond-to('lg') {
     grid-template-columns: 1fr;
   }
+
+  // Grid items default to min-width: auto, letting a child's min-content
+  // size force this track wider than the viewport on mobile. Direct
+  // children vary by template (article, plain div, aside) so target
+  // them generically rather than by class.
+  > * {
+    min-width: 0;
+  }
 }
 
 .page-layout--no-sidebar {

@@ -2288,6 +2288,9 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+.page-layout > * {
+  min-width: 0;
+}
 
 .page-layout--no-sidebar {
   grid-template-columns: 1fr;
@@ -2791,6 +2794,11 @@ textarea {
   .app-detail-layout {
     grid-template-columns: 1fr;
   }
+}
+
+.app-detail-main,
+.app-detail-sidebar {
+  min-width: 0;
 }
 
 .app-header-card {
