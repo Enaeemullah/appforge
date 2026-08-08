@@ -328,7 +328,7 @@ function appforge_customizer_css() {
     $rules = array(
         '.btn-primary, .btn-download'               => "background: {$primary};",
         '.btn-primary:hover, .btn-download:hover'   => "background: {$dark_primary};",
-        '.nav-cat-link:hover, .nav-cat-link.active' => "color: {$primary}; border-bottom-color: {$primary};",
+        '.nav-menu > li > a:hover, .nav-menu > .current-menu-item > a' => "color: {$primary};",
         '.apk-widget__header::before, .app-detail-section__header::before, .apk-section-header__title::before' => "background: {$primary};",
         '.app-info-item__icon'                      => "color: {$primary};",
         '.apk-tag:hover, .apk-tag:focus'            => "background: {$primary}; border-color: {$primary};",

@@ -209,6 +209,42 @@ add_action( 'wp', 'appforge_track_app_views' );
 // ============================================================
 
 /**
+ * Social platform icons keyed by the AppForge_Panel option suffix
+ * ('social_facebook', 'social_twitter', ...). Single source of truth
+ * shared by the header top bar and the footer brand column, so a
+ * platform added/fixed in one place can't drift out of sync with the
+ * other.
+ */
+function appforge_social_platforms() {
+    return array(
+        'facebook'  => array(
+            'label' => 'Facebook',
+            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>',
+        ),
+        'twitter'   => array(
+            'label' => 'Twitter / X',
+            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>',
+        ),
+        'youtube'   => array(
+            'label' => 'YouTube',
+            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58a2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>',
+        ),
+        'telegram'  => array(
+            'label' => 'Telegram',
+            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M21.2 2.5L2.3 9.6c-1.3.5-1.3 1.2-.2 1.5l4.8 1.5 11.1-7c.5-.3 1-.1.6.3L9 14.5v3.5l2.8-2.7 5.5 4c1 .6 1.7.3 2-1L22 3.5c.3-1.5-.5-2.1-1.3-1z"/></svg>',
+        ),
+        'instagram' => array(
+            'label' => 'Instagram',
+            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>',
+        ),
+        'whatsapp'  => array(
+            'label' => 'WhatsApp',
+            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12.001 2C6.478 2 2 6.478 2 12c0 1.874.514 3.628 1.406 5.129L2 22l4.99-1.376A9.943 9.943 0 0012.001 22C17.523 22 22 17.522 22 12S17.523 2 12.001 2zm0 18.13a8.09 8.09 0 01-4.13-1.13l-.297-.176-3.02.833.81-2.996-.194-.309A8.087 8.087 0 013.91 12c0-4.464 3.63-8.094 8.094-8.094 4.464 0 8.094 3.63 8.094 8.094 0 4.465-3.634 8.13-8.097 8.13zm4.443-6.06c-.243-.122-1.44-.71-1.663-.79-.223-.082-.385-.122-.547.122-.162.244-.628.79-.77.952-.142.163-.284.183-.527.061-.243-.122-1.026-.378-1.955-1.207-.723-.645-1.212-1.441-1.354-1.685-.142-.244-.015-.375.107-.497.11-.109.244-.284.365-.426.122-.142.163-.244.244-.406.081-.163.04-.305-.02-.427-.06-.122-.548-1.32-.75-1.807-.198-.475-.399-.41-.548-.418-.142-.007-.304-.009-.466-.009a.893.893 0 00-.648.304c-.223.244-.85.83-.85 2.028s.87 2.354.99 2.517c.122.163 1.715 2.618 4.153 3.671.58.25 1.033.4 1.386.512.583.185 1.113.159 1.532.096.467-.07 1.44-.589 1.643-1.157.203-.568.203-1.055.142-1.157-.06-.102-.223-.163-.466-.285z"/></svg>',
+        ),
+    );
+}
+
+/**
  * Format large numbers for display (1.2M, 45K).
  */
 function appforge_format_number( $num ) {
@@ -235,6 +271,43 @@ function appforge_stars( $rating, $max = 5 ) {
     }
     $output .= '</span>';
     return $output;
+}
+
+/**
+ * Small line-icon (matching the header/footer icon style) for a given
+ * app_category term, keyword-matched against its name/slug — falls
+ * back to a generic grid icon for anything unrecognized. Used in the
+ * footer's Categories column.
+ */
+function appforge_category_icon( $term ) {
+    static $icons = array(
+        'games'         => '<path d="M6 12h4M8 10v4"/><circle cx="15" cy="13" r="1"/><circle cx="18" cy="11" r="1"/><rect x="2" y="6" width="20" height="12" rx="6"/>',
+        'entertainment' => '<rect x="2" y="6" width="14" height="12" rx="2"/><polygon points="22 8 16 12 22 16 22 8"/>',
+        'video'         => '<rect x="2" y="6" width="14" height="12" rx="2"/><polygon points="22 8 16 12 22 16 22 8"/>',
+        'security'      => '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+        'vpn'           => '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+        'productivity'  => '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>',
+        'business'      => '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>',
+        'tools'         => '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>',
+        'social'        => '<path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>',
+        'communication' => '<path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>',
+        'photo'         => '<path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>',
+        'photography'   => '<path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>',
+        'education'     => '<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>',
+        'book'          => '<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>',
+        'music'         => '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+        'utilities'     => '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>',
+    );
+
+    $haystack = strtolower( $term->slug . ' ' . $term->name );
+    foreach ( $icons as $keyword => $path ) {
+        if ( strpos( $haystack, $keyword ) !== false ) {
+            return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . $path . '</svg>';
+        }
+    }
+
+    // Fallback: generic app-grid icon
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>';
 }
 
 /**

@@ -43,32 +43,7 @@
     </p>
 
     <?php
-    $socials = array(
-        'facebook'  => array(
-            'label' => 'Facebook',
-            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>',
-        ),
-        'twitter'   => array(
-            'label' => 'Twitter / X',
-            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>',
-        ),
-        'youtube'   => array(
-            'label' => 'YouTube',
-            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58a2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>',
-        ),
-        'telegram'  => array(
-            'label' => 'Telegram',
-            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M21.2 2.5L2.3 9.6c-1.3.5-1.3 1.2-.2 1.5l4.8 1.5 11.1-7c.5-.3 1-.1.6.3L9 14.5v3.5l2.8-2.7 5.5 4c1 .6 1.7.3 2-1L22 3.5c.3-1.5-.5-2.1-1.3-1z"/></svg>',
-        ),
-        'instagram' => array(
-            'label' => 'Instagram',
-            'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>',
-        ),
-        'whatsapp' => array(
-            'label' => 'WhatsApp',
-            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075"/></svg>',
-        ),
-    );
+    $socials = appforge_social_platforms();
 
     $has_social = false;
 
@@ -81,22 +56,23 @@
 
     if ( $has_social ) :
     ?>
-        <div class="footer-social">
-            <?php foreach ( $socials as $key => $s ) :
-                $url = AppForge_Panel::get( 'social_' . $key, '' );
-                if ( empty( $url ) ) continue;
-            ?>
-                <a href="<?php echo esc_url( $url ); ?>" class="social-btn" target="_blank" rel="noopener noreferrer">
-                    <?php echo $s['icon']; ?>
-                </a>
-            <?php endforeach; ?>
-        </div>
+    <h5 class="footer-col-heading"><?php esc_html_e( 'Follow Us', 'appforge' ); ?></h5>
+    <div class="footer-social">
+        <?php foreach ( $socials as $key => $s ) :
+            $url = AppForge_Panel::get( 'social_' . $key, '' );
+            if ( empty( $url ) ) continue;
+        ?>
+            <a href="<?php echo esc_url( $url ); ?>" class="social-btn social-btn--<?php echo esc_attr( $key ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $s['label'] ); ?>">
+                <?php echo $s['icon']; ?>
+            </a>
+        <?php endforeach; ?>
+    </div>
     <?php endif; ?>
 
 </div>
-                <!-- Quick Links -->
+                <!-- Explore -->
                 <div class="footer-col">
-                    <h5><?php esc_html_e( 'Quick Links', 'appforge' ); ?></h5>
+                    <h5 class="footer-col-heading"><?php esc_html_e( 'Explore', 'appforge' ); ?></h5>
                     <?php if ( has_nav_menu( 'footer' ) ) :
                         wp_nav_menu( array(
                             'theme_location' => 'footer',
@@ -106,26 +82,24 @@
                             'fallback_cb'    => false,
                         ) );
                     else :
-                        $quick_links = array(
-                            array( 'label' => __( 'Home', 'appforge' ),          'url' => home_url( '/' ) ),
-                            array( 'label' => __( 'All Apps', 'appforge' ),      'url' => get_post_type_archive_link( 'app' ) ),
-                            array( 'label' => __( 'Hot Apps', 'appforge' ),      'url' => appforge_page_url_by_template( 'page-hot-apps.php' ) ),
-                            array( 'label' => __( 'Popular Apps', 'appforge' ),  'url' => appforge_page_url_by_template( 'page-popular-apps.php' ) ),
-                            array( 'label' => __( 'Latest Apps', 'appforge' ),   'url' => appforge_page_url_by_template( 'page-latest-apps.php' ) ),
+                        $explore_links = array(
+                            array( 'label' => __( 'All Apps', 'appforge' ),       'url' => get_post_type_archive_link( 'app' ) ),
+                            array( 'label' => __( 'Latest Apps', 'appforge' ),    'url' => appforge_page_url_by_template( 'page-latest-apps.php' ) ),
+                            array( 'label' => __( 'Popular Apps', 'appforge' ),   'url' => appforge_page_url_by_template( 'page-popular-apps.php' ) ),
                             array( 'label' => __( 'Top Rated Apps', 'appforge' ), 'url' => appforge_page_url_by_template( 'page-top-apps.php' ) ),
+                            array( 'label' => __( 'Hot Apps', 'appforge' ),       'url' => appforge_page_url_by_template( 'page-hot-apps.php' ) ),
                         );
-                        if ( 'page' === get_option( 'show_on_front' ) && get_option( 'page_for_posts' ) ) {
-                            $quick_links[] = array(
-                                'label' => __( 'Blog', 'appforge' ),
-                                'url'   => get_permalink( get_option( 'page_for_posts' ) ),
-                            );
-                        }
                     ?>
-                    <ul>
-                        <?php foreach ( $quick_links as $link ) :
+                    <ul class="footer-link-list footer-link-list--arrow">
+                        <?php foreach ( $explore_links as $link ) :
                             if ( empty( $link['url'] ) ) continue;
                         ?>
-                        <li><a href="<?php echo esc_url( $link['url'] ); ?>"><?php echo esc_html( $link['label'] ); ?></a></li>
+                        <li>
+                            <a href="<?php echo esc_url( $link['url'] ); ?>">
+                                <span><?php echo esc_html( $link['label'] ); ?></span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+                            </a>
+                        </li>
                         <?php endforeach; ?>
                     </ul>
                     <?php endif; ?>
@@ -133,33 +107,30 @@
 
                 <!-- Categories -->
                 <div class="footer-col">
-                    <h5><?php esc_html_e( 'Categories', 'appforge' ); ?></h5>
+                    <h5 class="footer-col-heading"><?php esc_html_e( 'Categories', 'appforge' ); ?></h5>
                     <?php
                     $footer_cats = get_terms( array(
                         'taxonomy'   => 'app_category',
-                        'number'     => 6,
+                        'number'     => 5,
                         'hide_empty' => true,
                     ) );
                     if ( $footer_cats && ! is_wp_error( $footer_cats ) ) : ?>
-                    <ul>
+                    <ul class="footer-link-list footer-link-list--icon">
                         <?php foreach ( $footer_cats as $cat ) : ?>
-                        <li><a href="<?php echo esc_url( get_term_link( $cat ) ); ?>"><?php echo esc_html( $cat->name ); ?></a></li>
+                        <li>
+                            <a href="<?php echo esc_url( get_term_link( $cat ) ); ?>">
+                                <?php echo appforge_category_icon( $cat ); // phpcs:ignore ?>
+                                <span><?php echo esc_html( $cat->name ); ?></span>
+                            </a>
+                        </li>
                         <?php endforeach; ?>
-                    </ul>
-                    <?php else : ?>
-                    <ul>
-                        <li><a href="#"><?php esc_html_e( 'Games', 'appforge' ); ?></a></li>
-                        <li><a href="#"><?php esc_html_e( 'Utilities', 'appforge' ); ?></a></li>
-                        <li><a href="#"><?php esc_html_e( 'Social', 'appforge' ); ?></a></li>
-                        <li><a href="#"><?php esc_html_e( 'Photography', 'appforge' ); ?></a></li>
-                        <li><a href="#"><?php esc_html_e( 'Productivity', 'appforge' ); ?></a></li>
                     </ul>
                     <?php endif; ?>
                 </div>
 
-                <!-- Support -->
+                <!-- Company -->
                 <div class="footer-col">
-                    <h5><?php esc_html_e( 'Support', 'appforge' ); ?></h5>
+                    <h5 class="footer-col-heading"><?php esc_html_e( 'Company', 'appforge' ); ?></h5>
                     <?php if ( has_nav_menu( 'footer-2' ) ) :
                         wp_nav_menu( array(
                             'theme_location' => 'footer-2',
@@ -168,19 +139,39 @@
                             'fallback_cb'    => false,
                         ) );
                     else :
-                        $support_links = array(
-                            array( 'label' => __( 'Help Center', 'appforge' ),    'url' => appforge_page_url_by_slug( 'help' ) ),
-                            array( 'label' => __( 'Contact Us', 'appforge' ),     'url' => appforge_page_url_by_slug( 'contact' ) ),
-                            array( 'label' => __( 'Privacy Policy', 'appforge' ), 'url' => get_privacy_policy_url() ),
-                            array( 'label' => __( 'Terms of Use', 'appforge' ),   'url' => appforge_page_url_by_slug( 'terms' ) ),
-                            array( 'label' => __( 'DMCA', 'appforge' ),           'url' => appforge_page_url_by_slug( 'dmca' ) ),
+                        $company_links = array(
+                            array(
+                                'label' => __( 'About Us', 'appforge' ),
+                                'url'   => appforge_page_url_by_slug( 'about' ),
+                                'icon'  => '<path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>',
+                            ),
+                            array(
+                                'label' => __( 'Contact Us', 'appforge' ),
+                                'url'   => appforge_page_url_by_slug( 'contact' ),
+                                'icon'  => '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/>',
+                            ),
+                            array(
+                                'label' => __( 'Privacy Policy', 'appforge' ),
+                                'url'   => get_privacy_policy_url(),
+                                'icon'  => '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>',
+                            ),
+                            array(
+                                'label' => __( 'Terms & Conditions', 'appforge' ),
+                                'url'   => appforge_page_url_by_slug( 'terms' ),
+                                'icon'  => '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
+                            ),
                         );
                     ?>
-                    <ul>
-                        <?php foreach ( $support_links as $link ) :
+                    <ul class="footer-link-list footer-link-list--icon footer-link-list--muted">
+                        <?php foreach ( $company_links as $link ) :
                             if ( empty( $link['url'] ) ) continue;
                         ?>
-                        <li><a href="<?php echo esc_url( $link['url'] ); ?>"><?php echo esc_html( $link['label'] ); ?></a></li>
+                        <li>
+                            <a href="<?php echo esc_url( $link['url'] ); ?>">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><?php echo $link['icon']; // phpcs:ignore ?></svg>
+                                <span><?php echo esc_html( $link['label'] ); ?></span>
+                            </a>
+                        </li>
                         <?php endforeach; ?>
                     </ul>
                     <?php endif; ?>
@@ -194,19 +185,22 @@
 <div class="container">
     <div class="footer-bottom">
 
-        <p>
+        <p class="footer-bottom-copyright">
+            <span class="footer-bottom-shield" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </span>
             <?php
             $copyright = AppForge_Panel::get( 'footer_copyright' );
 
             if ( ! empty( $copyright ) ) {
                 echo esc_html( $copyright );
             } else {
-                echo '&copy; ' . esc_html( date( 'Y' ) ) . ' ' . esc_html( get_bloginfo( 'name' ) ) . '. All Rights Reserved.';
+                echo '&copy; ' . esc_html( date( 'Y' ) ) . ' <strong>' . esc_html( get_bloginfo( 'name' ) ) . '</strong>. All rights reserved.';
             }
             ?>
         </p>
 
-        <nav aria-label="<?php esc_attr_e( 'Legal links', 'appforge' ); ?>">
+        <nav class="footer-bottom-legal" aria-label="<?php esc_attr_e( 'Legal links', 'appforge' ); ?>">
 
             <?php if ( AppForge_Panel::get( 'footer_show_credit', '1' ) === '1' ) :
                 $author_name = get_theme_mod( 'appforge_author_name', 'Naeem Ullah' );

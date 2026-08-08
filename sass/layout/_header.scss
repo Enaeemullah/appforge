@@ -82,6 +82,20 @@
   gap: $space-4;
   list-style: none;
 
+  > li {
+    position: relative;
+
+    // Reveal on hover (mouse) or focus-within (keyboard tab into a
+    // submenu link) — .main-nav is hidden below 'lg' anyway, so no
+    // touch-specific handling is needed.
+    &:hover > .sub-menu,
+    &:focus-within > .sub-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+
   > li > a {
     display: inline-flex;
     align-items: center;
@@ -101,6 +115,64 @@
     color: $color-primary;
     font-weight: $font-weight-semibold;
   }
+}
+
+// CSS-only chevron — applies to any parent item WordPress marks
+// .menu-item-has-children (admin-built submenus included), so it
+// doesn't depend on a custom nav walker to inject an icon.
+.menu-item-has-children > a::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 1px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+.menu-item-has-children:hover > a::after,
+.menu-item-has-children:focus-within > a::after {
+  transform: rotate(225deg) translateY(2px);
+}
+
+// Dropdown submenu (rendered by WordPress for nested menu items, and
+// manually for the auto-populated Categories dropdown)
+.sub-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: $z-dropdown;
+  min-width: 200px;
+  margin-top: $space-2;
+  padding: 8px;
+  background: $color-white;
+  border: 1px solid $gray-200;
+  border-radius: $radius-md;
+  box-shadow: $shadow-lg;
+  list-style: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+
+  li { width: 100%; }
+
+  a {
+    display: block;
+    padding: 9px 12px;
+    border-radius: $radius-sm;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $gray-700;
+    white-space: nowrap;
+    transition: $transition-fast;
+
+    &:hover { background: $gray-100; color: $color-primary; }
+  }
+
+  .current-menu-item > a { color: $color-primary; font-weight: $font-weight-semibold; }
 }
 
 // Inline header search — pinned to the far right, always-on pill.
@@ -165,80 +237,112 @@
   }
 }
 
-// Category nav bar (below main header)
-.cat-nav-bar {
-  position: sticky;
-  top: $nav-height;
-  z-index: $z-sticky;
-  background: $color-white;
-  border-bottom: 1px solid $gray-200;
+// Dark / light theme toggle button
+.theme-toggle {
+  @include btn-reset;
+  @include flex-center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: $radius-full;
+  border: 1.5px solid $gray-200;
+  color: $gray-600;
+  transition: $transition-base;
 
-  // Edge fades hinting there's more to scroll — hidden until JS
-  // detects actual overflow, so a short list shows no fade at all.
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 1px;
-    width: 28px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    z-index: 1;
+  &:hover { border-color: $color-primary; color: $color-primary; }
+
+  svg { width: 18px; height: 18px; }
+
+  &__icon--sun  { display: none; }
+  &__icon--moon { display: block; }
+
+  html[data-theme='dark'] & {
+    border-color: $gray-700;
+    color: $gray-300;
+
+    &:hover { border-color: $color-primary; color: $color-primary; }
   }
-
-  &::before {
-    left: 0;
-    background: linear-gradient(to right, $color-white, rgba($color-white, 0));
-  }
-
-  &::after {
-    right: 0;
-    background: linear-gradient(to left, $color-white, rgba($color-white, 0));
-  }
-
-  &.has-scroll-left::before { opacity: 1; }
-  &.has-scroll-right::after { opacity: 1; }
 }
 
-.cat-nav-inner {
-  max-width: $container-max;
+html[data-theme='dark'] .theme-toggle__icon--sun  { display: block; }
+html[data-theme='dark'] .theme-toggle__icon--moon { display: none; }
+
+// ============================================================
+// Top utility bar (trust badges + socials + theme toggle + CTA)
+// ============================================================
+.top-bar {
+  background: $gray-50;
+  border-bottom: 1px solid $gray-200;
+}
+
+.top-bar__inner {
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 $container-padding;
+  padding: 10px $container-padding;
   display: flex;
   align-items: center;
-  gap: 4px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  justify-content: space-between;
+  gap: $space-3;
 
-  &::-webkit-scrollbar { display: none; }
-
-  @media (max-width: #{$bp-md}) { padding: 0 $space-2; }
+  @include respond-to('md') { padding: 8px $space-2; }
 }
 
-.nav-cat-link {
-  display: inline-flex;
+.top-bar__trust {
+  display: flex;
   align-items: center;
-  white-space: nowrap;
-  padding: 10px 16px;
+  gap: 8px;
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
-  color: $gray-600;
-  text-decoration: none;
-  border-bottom: 2px solid transparent;
-  transition: $transition-fast;
-  flex-shrink: 0;
+  color: $gray-700;
+  white-space: nowrap;
 
-  &:hover {
-    color: $color-primary;
-    border-bottom-color: $color-primary;
-  }
-
-  &.active {
-    color: $color-primary;
-    font-weight: $font-weight-semibold;
-    border-bottom-color: $color-primary;
+  @include respond-to('lg') {
+    span:not(:first-child) { display: none; }
   }
 }
+
+.top-bar__trust-icon {
+  @include flex-center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: $radius-full;
+  background: $color-primary;
+  color: $color-white;
+
+  svg { width: 12px; height: 12px; }
+}
+
+.top-bar__right {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  flex-shrink: 0;
+}
+
+.top-bar__social {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  @include respond-to('md') { display: none; }
+}
+
+.top-bar__social-link {
+  @include flex-center;
+  color: $gray-600;
+  transition: color 0.2s;
+
+  svg { width: 15px; height: 15px; }
+
+  &:hover { color: $color-primary; }
+}
+
+.top-bar__divider {
+  width: 1px;
+  height: 18px;
+  background: $gray-300;
+
+  @include respond-to('md') { display: none; }
+}
+

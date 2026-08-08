@@ -24,8 +24,24 @@
   grid-template-columns: 2fr repeat(3, 1fr);
   gap: $space-5;
 
+  // Vertical dividers between columns — only meaningful in the
+  // multi-column (side-by-side) layout, so it's removed again once
+  // the grid stacks below 'lg'.
+  > *:not(:first-child) {
+    border-left: 1px solid $footer-border;
+    padding-left: $space-3;
+  }
+
+  // Dividers only make sense in the 4-across desktop layout — a 2x2 or
+  // stacked grid would put a stray border on whichever item wraps to
+  // the start of a new row.
   @include respond-to('lg') {
     grid-template-columns: 1fr 1fr;
+
+    > *:not(:first-child) {
+      border-left: none;
+      padding-left: 0;
+    }
   }
 
   @include respond-to('md') {
@@ -91,21 +107,35 @@
   .footer-social {
     display: flex;
     align-items: center;
-    gap: $space-3;
+    gap: $space-2;
   }
 
   .social-btn {
     @include flex-center;
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-full;
+    border: 1.5px solid $footer-social-border;
+    background: $color-white;
     color: $footer-social-icon;
     text-decoration: none;
     transition: $transition-base;
+    flex-shrink: 0;
 
-    svg { width: 19px; height: 19px; }
+    svg { width: 17px; height: 17px; }
 
     &:hover {
-      color: $color-primary;
+      border-color: $color-primary;
       transform: translateY(-2px);
     }
+
+    // Brand colors — accent, not theme-dependent
+    &--facebook  { color: #1877F2; }
+    &--twitter   { color: $gray-900; }
+    &--youtube   { color: #FF0000; }
+    &--telegram  { color: #229ED9; }
+    &--instagram { color: #E1306C; }
+    &--whatsapp  { color: #25D366; }
   }
 }
 
@@ -113,28 +143,42 @@
 // Footer Columns
 // ============================================================
 
-.footer-col {
-  h5 {
-    font-size: 20px;
-    font-weight: $font-weight-semibold;
-    color: $footer-heading;
-    margin-bottom: $space-3;
-  }
+// Shared column heading (footer-col AND the brand's "Follow Us")
+.footer-col-heading {
+  font-size: $font-size-md;
+  font-weight: $font-weight-extrabold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: $footer-heading;
+  margin-bottom: $space-1;
 
+  &::after {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 3px;
+    border-radius: $radius-full;
+    background: $color-primary;
+    margin-top: 10px;
+  }
+}
+
+.footer-brand .footer-col-heading { margin-bottom: $space-2; margin-top: $space-1; }
+
+.footer-col {
   nav ul,
-  ul {
+  ul.footer-link-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: $space-3;
     padding: 0;
-    margin: 0;
+    margin: $space-3 0 0;
   }
 
   a {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
     font-size: $font-size-base;
     color: $footer-link;
     text-decoration: none;
@@ -143,6 +187,41 @@
     &:hover {
       color: $footer-link-hover;
     }
+  }
+}
+
+// Explore-style list: label + trailing chevron, divider between rows
+.footer-link-list--arrow {
+  li {
+    border-bottom: 1px solid $footer-border;
+    &:last-child { border-bottom: none; }
+  }
+
+  a {
+    justify-content: space-between;
+    padding: 12px 0;
+
+    svg { width: 14px; height: 14px; flex-shrink: 0; color: $gray-400; }
+
+    &:hover svg { color: $color-primary; }
+  }
+}
+
+// Categories / Company style list: leading icon + label.
+// Categories icons are brand green; Company icons (--muted) are a
+// neutral gray so the accent color stays reserved for app content.
+.footer-link-list--icon {
+  gap: $space-2;
+
+  a svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: $color-primary;
+  }
+
+  &.footer-link-list--muted a svg {
+    color: $gray-400;
   }
 }
 
@@ -168,23 +247,50 @@
     font-size: $font-size-sm;
     color: $footer-link;
   }
+}
 
-  nav {
-    display: flex;
-    align-items: center;
-    gap: $space-2;
-    flex-wrap: wrap;
-  }
+.footer-bottom-copyright {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
 
-  nav a {
+  strong { color: $footer-heading; }
+}
+
+.footer-bottom-shield {
+  @include flex-center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: $radius-full;
+  background: rgba($color-primary, 0.1);
+  color: $color-primary;
+
+  svg { width: 14px; height: 14px; }
+}
+
+.footer-bottom-legal {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  flex-wrap: wrap;
+
+  a,
+  .footer-credit {
     font-size: $font-size-sm;
     color: $footer-link;
     text-decoration: none;
     transition: $transition-base;
 
-    &:hover {
-      color: $footer-link-hover;
-    }
+    &:hover { color: $footer-link-hover; }
+  }
+
+  // Bullet between visible items (works regardless of which optional
+  // links/credit are present, since it's driven by DOM adjacency)
+  > *:not(:first-child)::before {
+    content: '•';
+    color: $footer-border;
+    margin-right: $space-2;
   }
 }
 

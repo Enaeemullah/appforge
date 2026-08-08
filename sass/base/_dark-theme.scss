@@ -1,0 +1,556 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ============================================================
+// DARK THEME
+// Retrofitted override layer, active when <html data-theme="dark">.
+// The rest of the theme has no CSS custom properties yet (every
+// color is a compile-time Sass variable used directly, and many are
+// piped through rgba()/darken() which can't take a runtime value) —
+// so rather than rewrite the whole palette, this file re-styles the
+// shared surfaces/components by class name. Brand/accent colors
+// (primary green, star-rating amber, per-platform social icon
+// colors) are intentionally left untouched in both themes.
+// ============================================================
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+
+  // Dark tokens (used only within this file)
+  --dt-bg:          #0f1115;
+  --dt-bg-alt:      #14161b;
+  --dt-surface:     #1a1d24;
+  --dt-surface-2:   #22252d;
+  --dt-border:      #2c303a;
+  --dt-border-soft: #23262e;
+  --dt-text:        #e8eaed;
+  --dt-text-2:      #c3c7cf;
+  --dt-text-muted:  #8b909c;
+  --dt-text-faint:  #5b606b;
+
+  // ------------------------------------------------------------
+  // Base
+  // ------------------------------------------------------------
+  body { background: var(--dt-bg); color: var(--dt-text); }
+
+  hr { border-top-color: var(--dt-border); }
+
+  // ------------------------------------------------------------
+  // Typography — element-level defaults (base/_typography.scss).
+  // Component classes read below have higher specificity and win
+  // over these where they overlap, so this only affects plain
+  // headings/paragraphs that don't belong to a styled component.
+  // ------------------------------------------------------------
+  h1, h2, h3, h4, h5, h6 { color: var(--dt-text); }
+  p { color: var(--dt-text-2); }
+
+  .section-title { color: var(--dt-text); }
+  .section-subtitle { color: var(--dt-text-muted); }
+
+  .post-meta { color: var(--dt-text-muted); .sep { color: var(--dt-border); } }
+
+  .text-muted { color: var(--dt-text-muted) !important; }
+  .text-dark  { color: var(--dt-text) !important; }
+
+  // Blog / page rich text body
+  .entry-content {
+    color: var(--dt-text-2);
+
+    blockquote { background: var(--dt-surface-2); color: var(--dt-text-2); }
+
+    code { background: var(--dt-surface-2); border-color: var(--dt-border); }
+
+    table {
+      border-color: var(--dt-border);
+
+      th { background: var(--dt-surface-2); border-bottom-color: var(--dt-border); }
+      td { border-bottom-color: var(--dt-border-soft); }
+    }
+
+    hr { border-top-color: var(--dt-border); }
+  }
+
+  .wp-caption .wp-caption-text { color: var(--dt-text-muted); }
+
+  // ------------------------------------------------------------
+  // Header
+  // ------------------------------------------------------------
+  .top-nav {
+    background: var(--dt-surface);
+    border-bottom-color: var(--dt-border);
+  }
+
+  .logo-text { color: var(--dt-text); }
+
+  .nav-menu > li > a { color: var(--dt-text-2); }
+
+  .nav-search-bar {
+    background: var(--dt-surface-2);
+    border-color: var(--dt-border);
+
+    input { color: var(--dt-text); }
+  }
+
+  .top-bar {
+    background: var(--dt-bg-alt);
+    border-bottom-color: var(--dt-border);
+  }
+
+  .top-bar__trust { color: var(--dt-text-2); }
+  .top-bar__social-link { color: var(--dt-text-muted); }
+  .top-bar__divider { background: var(--dt-border); }
+
+  .sub-menu {
+    background: var(--dt-surface);
+    border-color: var(--dt-border);
+
+    a { color: var(--dt-text-2); &:hover { background: var(--dt-surface-2); } }
+  }
+
+  // ------------------------------------------------------------
+  // Footer
+  // ------------------------------------------------------------
+  .site-footer {
+    background: var(--dt-surface);
+    color: var(--dt-text-2);
+    border-top-color: var(--dt-border);
+  }
+
+  .footer-top { border-bottom-color: var(--dt-border); }
+  .footer-grid > *:not(:first-child) { border-left-color: var(--dt-border); }
+
+  .footer-brand .footer-logo-text,
+  .footer-col-heading { color: var(--dt-text); }
+
+  .footer-brand p,
+  .footer-col a,
+  .footer-bottom-copyright,
+  .footer-bottom-legal a,
+  .footer-bottom-legal .footer-credit { color: var(--dt-text-muted); }
+
+  .footer-bottom-copyright strong { color: var(--dt-text); }
+  .footer-bottom-legal > *:not(:first-child)::before { color: var(--dt-border); }
+
+  .social-btn {
+    background: var(--dt-surface-2);
+    border-color: var(--dt-border);
+
+    // The X/Twitter brand mark is near-black — invisible on a dark
+    // circle, so it's the one accent color that needs a theme swap.
+    &--twitter { color: var(--dt-text); }
+  }
+
+  .footer-link-list--arrow li { border-bottom-color: var(--dt-border); }
+  .footer-link-list--arrow a svg { color: var(--dt-text-faint); }
+  .footer-link-list--muted a svg { color: var(--dt-text-faint); }
+
+  // ------------------------------------------------------------
+  // Cards
+  // ------------------------------------------------------------
+  .card,
+  .app-card,
+  .post-card {
+    background: var(--dt-surface);
+    border-color: var(--dt-border);
+  }
+
+  .app-card__thumb,
+  .post-card__thumb { background: var(--dt-bg-alt); }
+
+  .app-card__title,
+  .post-card__title { color: var(--dt-text); }
+
+  .app-card__excerpt,
+  .app-card__downloads,
+  .app-card__rating,
+  .post-card__excerpt,
+  .post-card__meta { color: var(--dt-text-muted); }
+
+  .app-card__footer,
+  .post-card__meta { border-top-color: var(--dt-border-soft); }
+
+  .app-card-list {
+    background: var(--dt-surface-2);
+    border-color: var(--dt-border);
+
+    &:hover { background: var(--dt-surface); }
+
+    &__title { color: var(--dt-text); }
+    &__meta  { color: var(--dt-text-muted); }
+  }
+
+  // ------------------------------------------------------------
+  // Sidebar / widgets
+  // ------------------------------------------------------------
+  .widget {
+    background: var(--dt-surface);
+    border-color: var(--dt-border);
+
+    &__header { border-bottom-color: var(--dt-border-soft); }
+    &__title  { color: var(--dt-text); }
+  }
+
+  .widget-post-list li { border-bottom-color: var(--dt-border-soft); }
+  .widget-post-list__thumb { background: var(--dt-bg-alt); }
+  .widget-post-list__title { color: var(--dt-text); }
+  .widget-post-list__meta { color: var(--dt-text-muted); }
+
+  .widget-about__desc { color: var(--dt-text-muted); }
+  .widget-about__stats {
+    border-color: var(--dt-border-soft);
+    dt { color: var(--dt-text); }
+    dd { color: var(--dt-text-muted); }
+  }
+
+  .social-icon { background: var(--dt-surface-2); color: var(--dt-text-muted); }
+
+  .widget-categories li { border-bottom-color: var(--dt-border-soft); }
+  .widget-categories a { color: var(--dt-text-2); }
+  .widget-categories .cat-count { background: var(--dt-surface-2); color: var(--dt-text-muted); }
+
+  // ------------------------------------------------------------
+  // Forms
+  // ------------------------------------------------------------
+  input[type="text"], input[type="search"], input[type="email"],
+  input[type="url"], input[type="number"], textarea, select {
+    background: var(--dt-surface-2);
+    border-color: var(--dt-border);
+    color: var(--dt-text);
+
+    &::placeholder { color: var(--dt-text-faint); }
+  }
+
+  .search-input-group {
+    background: var(--dt-surface-2);
+    border-color: var(--dt-border);
+
+    &:focus-within { background: var(--dt-surface); }
+
+    input { color: var(--dt-text); &::placeholder { color: var(--dt-text-faint); } }
+  }
+
+  .app-filter-bar__select { background: var(--dt-surface-2); border-color: var(--dt-border); color: var(--dt-text-2); }
+  .app-filter-bar__clear { color: var(--dt-text-faint); }
+
+  .comment-form label { color: var(--dt-text-2); }
+  .comment-form-cookies-consent label { color: var(--dt-text-muted); }
+
+  // ------------------------------------------------------------
+  // Buttons (non-brand variants only)
+  // ------------------------------------------------------------
+  .btn-ghost { color: var(--dt-text-2); &:hover { background: var(--dt-surface-2); color: var(--dt-text); } }
+  .btn-white { background: var(--dt-surface); color: $color-primary; &:hover { background: var(--dt-surface-2); } }
+  .btn-report-cancel { background: var(--dt-surface-2); color: var(--dt-text-2); &:hover { background: var(--dt-border); } }
+
+  // ------------------------------------------------------------
+  // Modal
+  // ------------------------------------------------------------
+  .report-modal__panel {
+    background: var(--dt-surface);
+    h3 { color: var(--dt-text); }
+  }
+  .report-modal__close { color: var(--dt-text-faint); &:hover { color: var(--dt-text-2); } }
+  .report-modal__field label { color: var(--dt-text-2); }
+
+  // ------------------------------------------------------------
+  // Pagination
+  // ------------------------------------------------------------
+  .page-numbers, .page-link {
+    background: var(--dt-surface);
+    border-color: var(--dt-border);
+    color: var(--dt-text-2);
+
+    &.dots { color: var(--dt-text-faint); }
+  }
+
+  .post-navigation { border-top-color: var(--dt-border); }
+  .post-navigation .nav-previous a, .post-navigation .nav-next a {
+    background: var(--dt-surface-2);
+    border-color: var(--dt-border);
+    &:hover { background: var(--dt-surface); }
+  }
+  .post-navigation .nav-title { color: var(--dt-text); }
+
+  // ------------------------------------------------------------
+  // Badges
+  // ------------------------------------------------------------
+  .badge-light { background: var(--dt-surface-2); color: var(--dt-text-2); }
+  .tag-pill { background: var(--dt-surface-2); border-color: var(--dt-border); color: var(--dt-text-2); }
+  .rating-row { color: var(--dt-text-muted); strong { color: var(--dt-text); } }
+
+  // ------------------------------------------------------------
+  // Grid / breadcrumbs / archive header
+  // ------------------------------------------------------------
+  .breadcrumb__link { color: var(--dt-text-muted); }
+  .breadcrumb__current { color: var(--dt-text-2); }
+  .breadcrumb__sep { color: var(--dt-text-faint); }
+
+  .archive-header { background: var(--dt-surface); border-color: var(--dt-border); }
+  .archive-header__title { color: var(--dt-text); }
+  .archive-header__desc, .archive-header__meta span { color: var(--dt-text-muted); }
+
+  // ------------------------------------------------------------
+  // Hero sidebar / promo (front page)
+  // ------------------------------------------------------------
+  .hero-sidebar { background: rgba(26, 29, 36, 0.92); border-color: var(--dt-border); }
+  .app-promo-card { background: var(--dt-surface); }
+  .app-promo-card__info h3 { color: var(--dt-text); }
+  .app-promo-card__info p { color: var(--dt-text-muted); }
+  .sidebar-heading { color: var(--dt-text-muted); }
+
+  // ------------------------------------------------------------
+  // Category archive page
+  // ------------------------------------------------------------
+  .archive-banner { background: var(--dt-surface); border-bottom-color: var(--dt-border); }
+  .archive-banner__title { color: var(--dt-text); }
+  .archive-banner__desc, .archive-banner__count { color: var(--dt-text-muted); }
+
+  .cat-section__title { color: var(--dt-text); }
+  .cat-tab { color: var(--dt-text-faint); &:hover { color: var(--dt-text-2); } }
+
+  .author-profile-card { background: var(--dt-surface); border-color: var(--dt-border); }
+  .author-profile-card__name { color: var(--dt-text); }
+  .author-profile-card__bio { color: var(--dt-text-muted); }
+  .author-profile-card__stats dt { color: var(--dt-text); }
+  .author-profile-card__stats dd { color: var(--dt-text-muted); }
+
+  .date-archive-header h1 { color: var(--dt-text); }
+
+  // ------------------------------------------------------------
+  // Category archive page — revamp (templates/_archive.scss)
+  // ------------------------------------------------------------
+  .cat-header {
+    background: var(--dt-surface);
+    border-color: var(--dt-border);
+  }
+  .cat-header__title { color: var(--dt-text); }
+  .cat-header__count { background: var(--dt-surface-2); color: var(--dt-text-muted); }
+  .cat-header__desc { color: var(--dt-text-muted); }
+  .cat-header__deco { color: var(--dt-surface-2); }
+
+  .cat-badge__icon { background: rgba($color-primary, 0.16); }
+  .cat-badge strong { color: var(--dt-text); }
+  .cat-badge small { color: var(--dt-text-muted); }
+
+  .cat-section__link { color: $color-primary; }
+  .cat-carousel-btn { background: var(--dt-surface); border-color: var(--dt-border); color: var(--dt-text-2); }
+
+  .cat-top-card:hover { background: var(--dt-surface-2); }
+  .cat-top-card__name { color: var(--dt-text); }
+  .cat-top-card__cat { color: var(--dt-text-muted); }
+
+  .cat-list-row { border-bottom-color: var(--dt-border-soft); }
+  .cat-list-row__name { color: var(--dt-text); }
+  .cat-list-row__desc { color: var(--dt-text-muted); }
+  .cat-list-row__size { color: var(--dt-text-muted); }
+
+  .cat-newsletter {
+    background: var(--dt-surface);
+    border-color: var(--dt-border);
+
+    &__body h3 { color: var(--dt-text); }
+    &__body p { color: var(--dt-text-muted); }
+    &__form input { background: var(--dt-surface-2); border-color: var(--dt-border); color: var(--dt-text); }
+  }
+
+  .cat-trust-strip { border-top-color: var(--dt-border); }
+  .cat-trust-item__icon { background: rgba($color-primary, 0.16); }
+  .cat-trust-item strong { color: var(--dt-text); }
+  .cat-trust-item small { color: var(--dt-text-muted); }
+
+  .recommendation-card { background: var(--dt-surface); border-color: var(--dt-border); }
+  .recommendation-card__title { color: var(--dt-text); }
+  .recommendation-card__desc { color: var(--dt-text-muted); }
+
+  // ------------------------------------------------------------
+  // Single app / post page (templates/_single.scss)
+  // ------------------------------------------------------------
+  .app-header-card,
+  .app-section,
+  .app-sw,
+  .toc,
+  .single-post-header,
+  .comments-area {
+    background: var(--dt-surface);
+    border-color: var(--dt-border);
+  }
+
+  .app-section__title,
+  .comments-title { color: var(--dt-text); }
+
+  .app-icon-box { border-color: var(--dt-border); }
+  .app-header-name { color: var(--dt-text); .app-version { color: var(--dt-text-faint); } }
+  .app-tagline { color: var(--dt-text-muted); }
+  .app-rating-row strong { color: var(--dt-text-2); }
+  .app-rating-row .votes { color: var(--dt-text-faint); }
+  .app-report-link { color: var(--dt-text-faint); }
+
+  .app-meta-panel { background: var(--dt-surface-2); border-color: var(--dt-border-soft); }
+  .app-meta-item { border-bottom-color: var(--dt-border-soft); }
+  .app-meta-key { color: var(--dt-text-faint); }
+  .app-meta-val { color: var(--dt-text-2); }
+
+  .app-share-bar { background: var(--dt-surface-2); border-top-color: var(--dt-border-soft); }
+
+  .app-section__hd { background: var(--dt-surface-2); }
+  .app-section__title { color: var(--dt-text-2); }
+  .app-desc-collapse:not(.expanded)::after {
+    background: linear-gradient(transparent, var(--dt-surface));
+  }
+
+  .versions-table {
+    th { background: var(--dt-surface-2); border-bottom-color: var(--dt-border); color: var(--dt-text-faint); }
+    td { border-bottom-color: var(--dt-border-soft); color: var(--dt-text-2); }
+    tr:hover td { background: var(--dt-surface-2); }
+  }
+
+  .app-sw__hd { background: var(--dt-surface-2); border-bottom-color: var(--dt-border-soft); }
+  .app-sw__title { color: var(--dt-text-muted); }
+  .sw-cat-link { color: var(--dt-text-2); }
+  .sw-app-item { border-bottom-color: var(--dt-border-soft); }
+  .sw-app-name { color: var(--dt-text-2); }
+  .sw-app-dev { color: var(--dt-text-faint); }
+
+  .toc__toggle { background: var(--dt-surface-2); }
+  .toc__title { color: var(--dt-text-2); }
+  .toc__chev { color: var(--dt-text-muted); }
+  .toc__item a { color: var(--dt-text-2); }
+  .toc__item--h3 a { color: var(--dt-text-muted); }
+
+  .single-post-meta-bar { border-bottom-color: var(--dt-border-soft); }
+  .single-post-thumb { background: var(--dt-bg-alt); }
+  .single-post-title { color: var(--dt-text); }
+
+  .author-box {
+    background: var(--dt-surface-2);
+    border-color: var(--dt-border);
+
+    &__avatar { border-color: var(--dt-border); }
+    &__name { color: var(--dt-text); }
+    &__bio { color: var(--dt-text-muted); }
+  }
+
+  .app-screenshot-thumb { border-color: var(--dt-border); }
+  .app-screenshots-row {
+    &::-webkit-scrollbar-track { background: var(--dt-surface-2); }
+    &::-webkit-scrollbar-thumb { background: var(--dt-border); }
+  }
+
+  .review-summary { border-bottom-color: var(--dt-border-soft); }
+  .review-summary__avg { color: var(--dt-text); }
+  .review-summary__count { color: var(--dt-text-faint); }
+  .review-bar { color: var(--dt-text-muted); &__track { background: var(--dt-surface-2); } }
+  .review-empty { color: var(--dt-text-faint); }
+  .review-item__author { color: var(--dt-text-2); }
+  .review-item__date { color: var(--dt-text-faint); }
+  .review-item__text { color: var(--dt-text-muted); }
+
+  .star-rating-input label { color: var(--dt-border); }
+
+  .comment-list .children { border-left-color: var(--dt-border); }
+  .comment-author .fn { color: var(--dt-text-2); }
+  .comment-metadata { color: var(--dt-text-faint); }
+  .comment-content { color: var(--dt-text-muted); }
+  .no-comments { color: var(--dt-text-faint); }
+  .comment-form-url label { color: var(--dt-text-2); }
+
+  // ------------------------------------------------------------
+  // Homepage sections (templates/_front-page.scss)
+  // ------------------------------------------------------------
+  .discover-section,
+  .ranked-section,
+  .hot-section,
+  .latest-section,
+  .blog-section {
+    background: var(--dt-surface);
+    border-color: var(--dt-border);
+  }
+
+  .apk-section-header__title { color: var(--dt-text); }
+
+  .app-tile {
+    color: var(--dt-text-2);
+    &:hover { background: var(--dt-surface-2); }
+    &__rating { color: var(--dt-text-muted); }
+  }
+
+  .ranked-card,
+  .hot-app-item,
+  .latest-app-item {
+    background: var(--dt-surface);
+    border-color: var(--dt-border);
+    color: var(--dt-text);
+  }
+
+  .ranked-card__badge { background: var(--dt-surface-2); color: var(--dt-text-muted); }
+  .ranked-card__name,
+  .hot-app-item__name,
+  .latest-app-item__name { color: var(--dt-text); }
+  .ranked-card__cat,
+  .ranked-card__stars,
+  .hot-app-item__cat,
+  .latest-app-item__cat,
+  .latest-app-item__ver { color: var(--dt-text-muted); }
+
+  .apk-tag {
+    background: var(--dt-surface-2);
+    border-color: var(--dt-border);
+    color: var(--dt-text-2);
+  }
+
+  .apk-widget,
+  .apk-promo-widget {
+    background: var(--dt-surface);
+    border-color: var(--dt-border);
+  }
+
+  .apk-widget__header { border-bottom-color: var(--dt-border-soft); }
+  .apk-widget__title { color: var(--dt-text-2); }
+
+  .apk-promo-widget__name { color: var(--dt-text); }
+  .apk-promo-widget__cat { color: var(--dt-text-muted); }
+
+  .editor-pick-item {
+    color: var(--dt-text);
+    border-bottom-color: var(--dt-border-soft);
+
+    &__num { color: var(--dt-border); }
+    &__cat { color: var(--dt-text-muted); }
+  }
+
+  .blog-card {
+    background: var(--dt-surface);
+    border-color: var(--dt-border);
+    color: var(--dt-text);
+
+    &__title { color: var(--dt-text); }
+    &__excerpt, &__date { color: var(--dt-text-muted); }
+  }
+
+  // ------------------------------------------------------------
+  // Download countdown page (templates/_download.scss)
+  // ------------------------------------------------------------
+  .dl-page-wrap { background: var(--dt-bg-alt); }
+  .dl-card { background: var(--dt-surface); border-color: var(--dt-border); }
+  .dl-app-icon { border-color: var(--dt-border); }
+  .dl-app-name, .dl-countdown { color: var(--dt-text); }
+  .dl-app-version { color: var(--dt-text-muted); }
+  .dl-spinner__track { stroke: var(--dt-border); }
+  .dl-status { color: var(--dt-text-muted); }
+  .dl-back-link { color: var(--dt-text-faint); }
+
+  // ------------------------------------------------------------
+  // 404 & search results (templates/_404.scss)
+  // ------------------------------------------------------------
+  .error-404-title { color: var(--dt-text); }
+  .error-404-desc { color: var(--dt-text-muted); }
+
+  .search-results-header h1 { color: var(--dt-text); }
+  .search-count { color: var(--dt-text-muted); }
+
+  .no-results {
+    &__title { color: var(--dt-text-2); }
+    &__desc { color: var(--dt-text-muted); }
+    &__suggestions { border-top-color: var(--dt-border); p { color: var(--dt-text-muted); } }
+  }
+}

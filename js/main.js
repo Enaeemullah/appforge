@@ -64,23 +64,55 @@
   }());
 
   // ============================================================
-  // CATEGORY HERO CAROUSEL — 3-up scroll row (category archive pages)
+  // DARK / LIGHT THEME TOGGLE
+  // The initial data-theme attribute is set synchronously by an inline
+  // script in <head> (before this file loads) to avoid a flash of the
+  // wrong theme — this just wires the header button to flip it.
   // ============================================================
   (function () {
-    var section = document.getElementById('catHeroCarousel');
+    var btn = document.getElementById('themeToggle');
+    if (!btn) return;
+
+    function isDark() {
+      return document.documentElement.getAttribute('data-theme') === 'dark';
+    }
+
+    function apply(dark) {
+      if (dark) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+      btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+    }
+
+    apply(isDark());
+
+    btn.addEventListener('click', function () {
+      var dark = !isDark();
+      apply(dark);
+      try { localStorage.setItem('appforge-theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }());
+
+  // ============================================================
+  // CATEGORY TOP CAROUSEL — icon-card scroll row (category archive pages)
+  // ============================================================
+  (function () {
+    var section = document.getElementById('catTopCarousel');
     if (!section) return;
 
-    var track   = section.querySelector('[data-cat-hero-track]');
-    var prevBtn = section.querySelector('[data-cat-hero-prev]');
-    var nextBtn = section.querySelector('[data-cat-hero-next]');
+    var track   = section.querySelector('[data-cat-top-track]');
+    var prevBtn = section.querySelector('[data-cat-top-prev]');
+    var nextBtn = section.querySelector('[data-cat-top-next]');
     if (!track) return;
 
     function scrollByCard(dir) {
-      var card = track.querySelector('.cat-hero-card');
+      var card = track.querySelector('.cat-top-card');
       if (!card) return;
       var trackStyle = window.getComputedStyle(track);
       var gap = parseFloat(trackStyle.columnGap || trackStyle.gap) || 0;
-      track.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior: 'smooth' });
+      track.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap) * 2, behavior: 'smooth' });
     }
 
     if (prevBtn) prevBtn.addEventListener('click', function () { scrollByCard(-1); });
@@ -127,25 +159,6 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && isOpen) { close(); input.blur(); }
     });
-  }());
-
-  // ============================================================
-  // CATEGORY BAR — scroll fade hints (left/right edges)
-  // ============================================================
-  (function () {
-    var bar   = document.querySelector('.cat-nav-bar');
-    var inner = document.querySelector('.cat-nav-inner');
-    if (!bar || !inner) return;
-
-    function update() {
-      var maxScroll = inner.scrollWidth - inner.clientWidth;
-      bar.classList.toggle('has-scroll-left', inner.scrollLeft > 1);
-      bar.classList.toggle('has-scroll-right', inner.scrollLeft < maxScroll - 1);
-    }
-
-    inner.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    update();
   }());
 
   // ============================================================

@@ -268,7 +268,7 @@ class AppForge_Panel {
             .sw-cat-icon, .app-read-more { background: {$primary} !important; }
             .app-cat-badge, .apk-section-header__title::before,
             .apk-widget__header::before, .footer-credit a,
-            .nav-cat-link:hover, .nav-cat-link.active { color: {$primary} !important; }
+            .nav-menu > li > a:hover, .nav-menu > .current-menu-item > a { color: {$primary} !important; }
             .apk-section-header__link { border-color: rgba(0,0,0,.15) !important; color: {$primary} !important; }
             ";
         }
@@ -694,12 +694,12 @@ class AppForge_Panel {
                 <div class="af-row-control">
                     <div class="af-radio-group">
                         <?php
-                        $styles = array( 'light' => 'Light', 'dark' => 'Dark (coming soon)' );
+                        $styles = array( 'light' => 'Light', 'dark' => 'Dark' );
                         $cur = self::get( 'color_style', 'light' );
                         foreach ( $styles as $val => $lab ) : ?>
                         <label>
                             <input type="radio" name="color_style" value="<?php echo esc_attr( $val ); ?>"
-                                   <?php checked( $cur, $val ); ?> <?php echo $val === 'dark' ? 'disabled' : ''; ?>>
+                                   <?php checked( $cur, $val ); ?>>
                             <?php echo esc_html( $lab ); ?>
                         </label>
                         <?php endforeach; ?>

@@ -46,3 +46,6 @@ Tags: custom-logo, custom-colors, custom-menu, featured-images, responsive-layou
 @use 'templates/front-page';
 @use 'templates/404' as t404;
 @use 'templates/download';
+
+// 6. Dark theme (must compile last so its overrides win the cascade)
+@use 'base/dark-theme';
