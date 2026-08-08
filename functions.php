@@ -786,6 +786,12 @@ add_action( 'wp_ajax_appforge_report_app', 'appforge_handle_app_report' );
 add_action( 'wp_ajax_nopriv_appforge_report_app', 'appforge_handle_app_report' );
 
 // ============================================================
+// LICENSING
+// ============================================================
+require_once get_template_directory() . '/inc/licensing.php';
+require_once get_template_directory() . '/inc/updater.php';
+
+// ============================================================
 // ADMIN PANEL
 // ============================================================
 require_once get_template_directory() . '/inc/admin-panel.php';

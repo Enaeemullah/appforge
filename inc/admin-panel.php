@@ -316,6 +316,7 @@ class AppForge_Panel {
             'colors'  => array( 'label' => 'Colors',          'icon' => 'dashicons-art' ),
             'sidebar' => array( 'label' => 'Sidebar',         'icon' => 'dashicons-layout' ),
             'footer'  => array( 'label' => 'Footer',          'icon' => 'dashicons-admin-links' ),
+            'license' => array( 'label' => 'License',         'icon' => 'dashicons-admin-network' ),
         );
         ?>
         <div class="af-wrap">
@@ -347,6 +348,12 @@ class AppForge_Panel {
                     <div class="af-notice">✓ Settings saved successfully.</div>
                     <?php endif; ?>
 
+                    <?php if ( $sec === 'license' ) : ?>
+
+                        <?php AppForge_License::render_section(); ?>
+
+                    <?php else : ?>
+
                     <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
                         <?php wp_nonce_field( 'af_save_settings' ); ?>
                         <input type="hidden" name="action" value="af_save">
@@ -366,6 +373,8 @@ class AppForge_Panel {
 
                         <button type="submit" class="af-save-btn">Save changes</button>
                     </form>
+
+                    <?php endif; ?>
 
                 </div>
             </div>
